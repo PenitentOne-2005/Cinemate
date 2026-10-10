@@ -57,17 +57,24 @@ export class AuthController {
   }
 
   @Post('logout')
-  logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('access_token', {
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.authService.logout(req.cookies?.refresh_token);
+
+    res.clearCookie('refresh_token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      path: '/',
     });
 
     res.clearCookie('refresh_token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      path: '/',
     });
 
     return {

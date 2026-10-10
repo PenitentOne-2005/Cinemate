@@ -22,3 +22,8 @@ export * from './enums.js';
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model RefreshSession
+ * 
+ */
+export type RefreshSession = Prisma.RefreshSessionModel
