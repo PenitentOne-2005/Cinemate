@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
+import { randomUUID } from 'node:crypto';
 import type { GoogleUser } from './interface.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
@@ -42,21 +43,37 @@ export class AuthService {
       },
     });
 
-    let currentSessionId: string | null = null;
+    let currentSession: (typeof sessions)[number] | null = null;
 
     for (const session of sessions) {
       if (await argon2.verify(session.tokenHash, refreshToken)) {
-        currentSessionId = session.id;
+        currentSession = session;
         break;
       }
     }
 
-    if (!currentSessionId) {
+    if (!currentSession) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
+    if (currentSession.usedAt || currentSession.revokedAt) {
+      if (currentSession.usedAt) {
+       await this.prisma.refreshSession.updateMany({
+          where: {
+            familyId: currentSession.familyId,
+            revokedAt: null,
+          },
+          data: {
+            revokedAt: new Date(),
+          },
+        });
+      }
+
+     throw new UnauthorizedException('Refresh token reuse detected');
+    }
+
     const user = await this.prisma.user.findUnique({
-      where: {
+     where: {
         id: payload.sub,
       },
     });
@@ -65,29 +82,55 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const newToken = await this.generateRefreshToken(user.id);
+    const newToken = await this.generateRefreshToken(
+      user.id,
+      currentSession.familyId,
+    );
+
     const accessToken = await this.createAccessToken(user.id);
 
-    await this.prisma.$transaction(async (tx) => {
-      const deleted = await tx.refreshSession.deleteMany({
+    const result = await this.prisma.$transaction(async (tx) => {
+     const updated = await tx.refreshSession.updateMany({
         where: {
-          id: currentSessionId!,
-          userId: user.id,
+          id: currentSession.id,
+          usedAt: null,
+          revokedAt: null,
+        },
+        data: {
+          usedAt: new Date(),
         },
       });
 
-      if (deleted.count !== 1) {
-        throw new UnauthorizedException('Refresh token already used');
+      if (updated.count !== 1) {
+        return false;
       }
 
       await tx.refreshSession.create({
         data: {
           userId: user.id,
+          tokenId: newToken.tokenId,
+          familyId: newToken.familyId,
           tokenHash: newToken.tokenHash,
           expiresAt: newToken.expiresAt,
         },
       });
+
+      return true;
     });
+
+    if (!result) {
+      await this.prisma.refreshSession.updateMany({
+        where: {
+          familyId: currentSession.familyId,
+          revokedAt: null,
+        },
+        data: {
+          revokedAt: new Date(),
+        },
+      });
+
+      throw new UnauthorizedException('Refresh token already used');
+    }
 
     return {
       accessToken,
@@ -164,6 +207,8 @@ export class AuthService {
     await this.prisma.refreshSession.create({
       data: {
         userId,
+        tokenId: token.tokenId,
+        familyId: token.familyId,
         tokenHash: token.tokenHash,
         expiresAt: token.expiresAt,
       },
@@ -172,26 +217,31 @@ export class AuthService {
     return token.refreshToken;
   }
 
-  private async generateRefreshToken(userId: string) {
+  private async generateRefreshToken(userId: string, familyId: string = randomUUID()) {
+    const tokenId = randomUUID();
+
     const refreshToken = await this.jwtService.signAsync(
-      { sub: userId },
       {
-        secret: this.configService.getOrThrow<string>(
-          'JWT_REFRESH_SECRET',
-        ),
+        sub: userId,
+        jti: tokenId,
+      },
+      {
+        secret: process.env.JWT_REFRESH_SECRET,
         expiresIn: '7d',
       },
     );
 
     const tokenHash = await argon2.hash(refreshToken);
-    const expiresAt = new Date(
-      Date.now() + 7 * 24 * 60 * 60 * 1000,
-    );
+
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
 
     return {
       refreshToken,
       tokenHash,
       expiresAt,
+      tokenId,
+      familyId,
     };
   }
 

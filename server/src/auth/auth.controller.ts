@@ -63,7 +63,7 @@ export class AuthController {
   ) {
     await this.authService.logout(req.cookies?.refresh_token);
 
-    res.clearCookie('refresh_token', {
+    res.clearCookie('access_token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
