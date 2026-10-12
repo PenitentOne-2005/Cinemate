@@ -5,6 +5,7 @@ import { GoogleStrategy } from './strategies/google.strategy.js';
 import { AuthController } from './auth.controller.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { AuthService } from './auth.service.js';
+import { JwtStrategy } from './jwt.strategy.js';
 
 @Module({
   imports: [PassportModule, JwtModule.register({})],
@@ -13,6 +14,7 @@ import { AuthService } from './auth.service.js';
     AuthService,
     GoogleStrategy,
     PrismaService,
+    JwtStrategy,
   ],
 })
 export class AuthModule {}

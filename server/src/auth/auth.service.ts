@@ -56,20 +56,22 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    if (currentSession.usedAt || currentSession.revokedAt) {
-      if (currentSession.usedAt) {
-       await this.prisma.refreshSession.updateMany({
-          where: {
-            familyId: currentSession.familyId,
-            revokedAt: null,
-          },
-          data: {
-            revokedAt: new Date(),
-          },
-        });
-      }
+    if (currentSession.revokedAt) {
+      throw new UnauthorizedException('Refresh session revoked');
+    }
 
-     throw new UnauthorizedException('Refresh token reuse detected');
+    if (currentSession.usedAt) {
+      await this.prisma.refreshSession.updateMany({
+        where: {
+          familyId: currentSession.familyId,
+          revokedAt: null,
+        },
+        data: {
+         revokedAt: new Date(),
+        },
+    });
+
+      throw new UnauthorizedException('Refresh token reuse detected');
     }
 
     const user = await this.prisma.user.findUnique({

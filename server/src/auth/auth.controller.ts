@@ -3,6 +3,8 @@ import { AuthGuard } from '@nestjs/passport';
 import type { Request, Response } from 'express';
 import type { GoogleUser } from './interface.js';
 import { AuthService } from './auth.service.js';
+import { JwtAuthGuard } from './jwt-auth.guard.js';
+import { CurrentUser } from './decorators/current-user.decorator.js';
 
 @Controller('auth')
 export class AuthController {
@@ -80,6 +82,12 @@ export class AuthController {
     return {
       message: 'Logged out successfully',
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getMe(@CurrentUser() user: { userId: string }) {
+    return { userId: user.userId };
   }
 
   private setAuthCookies(
