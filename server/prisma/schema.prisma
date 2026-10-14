@@ -14,7 +14,7 @@ model User {
   email     String   @unique
   name      String
   avatar    String?
-  username  String?  @unique
+  username  String   @unique
   createdAt DateTime @default(now()) @map("created_at")
 
   refreshSessions RefreshSession[]

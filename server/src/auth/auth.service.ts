@@ -179,12 +179,15 @@ export class AuthService {
   }
 
   private async createUser(googleUser: GoogleUser) {
+    const username = await this.generateUsername(googleUser.name);
+
     return this.prisma.user.create({
       data: {
         googleSub: googleUser.googleSub,
         name: googleUser.name,
         email: googleUser.email,
         avatar: googleUser.avatar,
+        username
       },
     });
   }
@@ -260,5 +263,27 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
+  }
+
+  private async generateUsername(name: string): Promise<string> {
+    const baseUsername =
+      name
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '') || 'user';
+
+    let username = baseUsername;
+    let suffix = 1;
+
+    while (
+      await this.prisma.user.findUnique({
+        where: { username },
+        select: { id: true },
+      })
+    ) {
+      username = `${baseUsername}${suffix}`;
+      suffix++;
+    }
+
+    return username;
   }
 }
