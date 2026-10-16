@@ -1,14 +1,26 @@
-import { Controller, Get, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import type { Request, Response } from 'express';
 import type { GoogleUser } from './interface.js';
 import { AuthService } from './auth.service.js';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
+import { PrismaService } from '../prisma/prisma.service.js';
 import { CurrentUser } from './decorators/current-user.decorator.js';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -21,19 +33,11 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } =
-      await this.authService.loginWithGoogle(
-        req.user as GoogleUser,
-      );
+      await this.authService.loginWithGoogle(req.user as GoogleUser);
 
-    this.setAuthCookies(
-      res,
-      accessToken,
-      refreshToken,
-    );
+    this.setAuthCookies(res, accessToken, refreshToken);
 
-    return {
-      message: 'Authentication successful',
-    };
+    return res.redirect('http://localhost:3001/profile');
   }
 
   @Post('refresh')
@@ -47,9 +51,7 @@ export class AuthController {
       throw new UnauthorizedException();
     }
 
-    const tokens = await this.authService.refreshTokens(
-      refreshToken,
-    );
+    const tokens = await this.authService.refreshTokens(refreshToken);
 
     this.setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
 
@@ -59,10 +61,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await this.authService.logout(req.cookies?.refresh_token);
 
     res.clearCookie('access_token', {
@@ -86,8 +85,24 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  getMe(@CurrentUser() user: { userId: string }) {
-    return { userId: user.userId };
+  async getMe(@CurrentUser() user: { userId: string }) {
+    const currentUser = await this.prisma.user.findUnique({
+      where: { id: user.userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatar: true,
+        username: true,
+        createdAt: true,
+      },
+    });
+
+    if (!currentUser) {
+      throw new UnauthorizedException();
+    }
+
+    return currentUser;
   }
 
   private setAuthCookies(

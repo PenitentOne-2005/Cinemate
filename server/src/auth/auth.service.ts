@@ -11,7 +11,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   async loginWithGoogle(googleUser: GoogleUser) {
@@ -27,7 +27,7 @@ export class AuthService {
     return {
       user,
       accessToken,
-      refreshToken
+      refreshToken,
     };
   }
 
@@ -67,15 +67,15 @@ export class AuthService {
           revokedAt: null,
         },
         data: {
-         revokedAt: new Date(),
+          revokedAt: new Date(),
         },
-    });
+      });
 
       throw new UnauthorizedException('Refresh token reuse detected');
     }
 
     const user = await this.prisma.user.findUnique({
-     where: {
+      where: {
         id: payload.sub,
       },
     });
@@ -92,7 +92,7 @@ export class AuthService {
     const accessToken = await this.createAccessToken(user.id);
 
     const result = await this.prisma.$transaction(async (tx) => {
-     const updated = await tx.refreshSession.updateMany({
+      const updated = await tx.refreshSession.updateMany({
         where: {
           id: currentSession.id,
           usedAt: null,
@@ -150,7 +150,7 @@ export class AuthService {
     try {
       payload = await this.verifyRefreshToken(refreshToken);
     } catch {
-     return;
+      return;
     }
 
     const sessions = await this.prisma.refreshSession.findMany({
@@ -187,7 +187,7 @@ export class AuthService {
         name: googleUser.name,
         email: googleUser.email,
         avatar: googleUser.avatar,
-        username
+        username,
       },
     });
   }
@@ -198,9 +198,7 @@ export class AuthService {
         sub: userId,
       },
       {
-        secret: this.configService.getOrThrow<string>(
-          'JWT_ACCESS_SECRET',
-        ),
+        secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
         expiresIn: '15m',
       },
     );
@@ -222,7 +220,10 @@ export class AuthService {
     return token.refreshToken;
   }
 
-  private async generateRefreshToken(userId: string, familyId: string = randomUUID()) {
+  private async generateRefreshToken(
+    userId: string,
+    familyId: string = randomUUID(),
+  ) {
     const tokenId = randomUUID();
 
     const refreshToken = await this.jwtService.signAsync(
@@ -252,24 +253,16 @@ export class AuthService {
 
   private async verifyRefreshToken(refreshToken: string) {
     try {
-      return await this.jwtService.verifyAsync<{ sub: string }>(
-        refreshToken,
-       {
-          secret: this.configService.getOrThrow<string>(
-            'JWT_REFRESH_SECRET',
-          ),
-        },
-      );
+      return await this.jwtService.verifyAsync<{ sub: string }>(refreshToken, {
+        secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
+      });
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
   }
 
   private async generateUsername(name: string): Promise<string> {
-    const baseUsername =
-      name
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, '') || 'user';
+    const baseUsername = name.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user';
 
     let username = baseUsername;
     let suffix = 1;

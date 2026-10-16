@@ -1,69 +1,107 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "./context/auth-context";
+import styles from "./page.module.css";
+
+const Auth = () => {
+  const router = useRouter();
+  const { isLoading, isAuthenticated, error, refreshUser } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.replace("/profile");
+    }
+  }, [isLoading, isAuthenticated, router]);
+
+  if (isLoading) {
+    return <main className={styles.authPage}>Проверка авторизации...</main>;
+  }
+
+  if (error) {
+    return (
+      <main className={styles.authPage}>
+        <section className={styles.authCard}>
+          <p role="alert">{error}</p>
+          <button onClick={() => void refreshUser()}>Повторить</button>
+        </section>
       </main>
-    </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <main className={styles.authPage}>Перенаправление...</main>;
+  }
+
+  return (
+    <main className={styles.authPage}>
+      <section className={styles.authCard}>
+        <div className={styles.brandIcon} aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="32"
+            height="32"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="3" y="5" width="18" height="14" rx="3" />
+            <path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none" />
+          </svg>
+        </div>
+
+        <h1 className={styles.brandName}>Cinemeow</h1>
+
+        <p className={styles.brandDescription}>
+          Смотри вместе. Даже на расстоянии.
+        </p>
+
+        <div className={styles.authContent}>
+          <h2>Добро пожаловать</h2>
+
+          <p className={styles.authDescription}>
+            Войди, чтобы смотреть видео вместе с друзьями.
+          </p>
+
+          <a
+            className={styles.googleButton}
+            href="http://localhost:3000/auth/google"
+          >
+            <svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true">
+              <path
+                fill="#EA4335"
+                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.61l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"
+                transform="translate(0 4)"
+              />
+              <path
+                fill="#4285F4"
+                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.75 7.18l7.73 6C44.43 37.95 46.98 31.8 46.98 24.55Z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M10.53 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a23.9 23.9 0 0 0 0 21.56l7.98-6.19Z"
+                transform="translate(0 4)"
+              />
+              <path
+                fill="#34A853"
+                d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"
+                transform="translate(0 -4)"
+              />
+            </svg>
+            <span>Продолжить с Google</span>
+          </a>
+        </div>
+
+        <p className={styles.authTerms}>
+          Продолжая, ты соглашаешься с условиями использования и политикой
+          конфиденциальности.
+        </p>
+      </section>
+    </main>
   );
-}
+};
+
+export default Auth;
