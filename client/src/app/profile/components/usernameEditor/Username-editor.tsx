@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useAuth } from "@/app/context/auth-context";
 import { authService } from "@/app/services/auth.service";
-import { ApiError } from "@/app/types/auth.types";
+import { ApiError, type AuthUser } from "@/app/types/auth.types";
 import styles from "./username-editor.module.css";
+
+const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
+
+const ALLOWED_AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const UsernameEditor = () => {
   const { user, updateUser } = useAuth();
@@ -14,6 +18,11 @@ const UsernameEditor = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -25,15 +34,44 @@ const UsernameEditor = () => {
     }
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [isOpen, isSaving]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) {
+        URL.revokeObjectURL(previewUrlRef.current);
+      }
+    };
+  }, []);
 
   if (!user) return null;
 
   const currentUsername = user.username;
 
+  const hasChanged =
+    username.trim().toLowerCase() !== currentUsername || avatarFile !== null;
+
+  function clearAvatarSelection() {
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+      previewUrlRef.current = null;
+    }
+
+    setAvatarFile(null);
+    setAvatarPreview(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
   function openModal() {
     setUsername(currentUsername);
+    clearAvatarSelection();
     setMessage("");
     setIsError(false);
     setIsOpen(true);
@@ -41,53 +79,116 @@ const UsernameEditor = () => {
 
   function closeModal() {
     if (isSaving) return;
+
+    clearAvatarSelection();
     setIsOpen(false);
+  }
+
+  function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
+      setMessage("Выбери изображение JPEG, PNG или WebP");
+      setIsError(true);
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_AVATAR_SIZE) {
+      setMessage("Размер изображения не должен превышать 5 МБ");
+      setIsError(true);
+      event.target.value = "";
+      return;
+    }
+
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    previewUrlRef.current = previewUrl;
+
+    setAvatarFile(file);
+    setAvatarPreview(previewUrl);
+    setMessage("");
+    setIsError(false);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const normalizedUsername = username.trim().toLowerCase();
+    if (isSaving || !hasChanged) return;
+    if (!user) return;
 
-    if (
-      !normalizedUsername ||
-      normalizedUsername === currentUsername ||
-      isSaving
-    ) {
-      return;
-    }
+    const normalizedUsername = username.trim().toLowerCase();
+    const usernameChanged = normalizedUsername !== currentUsername;
+    const selectedAvatar = avatarFile;
 
     setIsSaving(true);
     setMessage("");
     setIsError(false);
 
+    let latestUser: AuthUser = user;
+    const errors: string[] = [];
+    let updatedSomething = false;
+
     try {
-      const updatedUser = await authService.updateUsername(normalizedUsername);
+      if (usernameChanged) {
+        try {
+          const updatedUser =
+            await authService.updateUsername(normalizedUsername);
 
-      updateUser(updatedUser);
-      setUsername(updatedUser.username);
-      setMessage("Username успешно изменён");
-      setIsOpen(false);
-    } catch (error) {
-      setIsError(true);
-
-      if (error instanceof ApiError && error.status === 409) {
-        setMessage("Этот username уже занят");
-      } else if (error instanceof ApiError && error.status === 400) {
-        setMessage(error.message || "Проверьте формат username");
-      } else {
-        setMessage(
-          error instanceof Error
-            ? error.message
-            : "Не удалось изменить username",
-        );
+          latestUser = updatedUser;
+          updateUser(updatedUser);
+          updatedSomething = true;
+        } catch (error) {
+          errors.push(
+            error instanceof ApiError && error.status === 409
+              ? "Этот username уже занят"
+              : error instanceof ApiError && error.status === 400
+                ? error.message
+                : "Не удалось изменить username",
+          );
+        }
       }
+
+      if (selectedAvatar) {
+        try {
+          const updatedUser = await authService.updateAvatar(selectedAvatar);
+
+          latestUser = updatedUser;
+          updateUser(updatedUser);
+          updatedSomething = true;
+        } catch (error) {
+          errors.push(
+            error instanceof Error
+              ? error.message
+              : "Не удалось загрузить аватар",
+          );
+        }
+      }
+
+      if (errors.length > 0) {
+        setIsError(true);
+        setMessage(
+          updatedSomething
+            ? `Профиль обновлён частично. ${errors.join(". ")}`
+            : errors.join(". "),
+        );
+
+        return;
+      }
+
+      setUsername(latestUser.username);
+      clearAvatarSelection();
+      setMessage("Профиль успешно обновлён");
+      setIsOpen(false);
     } finally {
       setIsSaving(false);
     }
   }
-
-  const hasChanged = username.trim().toLowerCase() !== currentUsername;
 
   return (
     <>
@@ -132,7 +233,9 @@ const UsernameEditor = () => {
             <div className={styles.modalHeader}>
               <div>
                 <h2 id="edit-profile-title">Edit profile</h2>
-                <p>Измени имя, которое видят другие пользователи.</p>
+                <p>
+                  Измени аватар и username, которые видят другие пользователи.
+                </p>
               </div>
 
               <button
@@ -157,6 +260,45 @@ const UsernameEditor = () => {
             </div>
 
             <form className={styles.form} onSubmit={handleSubmit}>
+              <div className={styles.avatarEditor}>
+                <img
+                  className={styles.avatarPreview}
+                  src={avatarPreview ?? user.avatar ?? "/default-avatar.png"}
+                  alt="Предпросмотр аватара"
+                />
+
+                <input
+                  ref={fileInputRef}
+                  id="edit-avatar"
+                  name="avatar"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  hidden
+                  disabled={isSaving}
+                  onChange={handleAvatarChange}
+                />
+
+                <button
+                  className={styles.cancelButton}
+                  type="button"
+                  disabled={isSaving}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  Choose avatar
+                </button>
+
+                {avatarFile && (
+                  <button
+                    className={styles.cancelButton}
+                    type="button"
+                    disabled={isSaving}
+                    onClick={clearAvatarSelection}
+                  >
+                    Remove selection
+                  </button>
+                )}
+              </div>
+
               <label className={styles.label} htmlFor="edit-username">
                 Username
               </label>

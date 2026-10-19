@@ -216,6 +216,22 @@
   outline-offset: 3px;
 }
 
+.avatarEditor {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.avatarPreview {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #252525;
+}
+
 @keyframes modalAppear {
   from {
     opacity: 0;
