@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -7,8 +8,11 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import type { Request, Response } from 'express';
 import type { GoogleUser } from './interface.js';
@@ -115,6 +119,38 @@ export class AuthController {
     @Body() dto: UpdateUsernameDto,
   ) {
     return this.authService.updateUsername(user.userId, dto.username);
+  }
+
+  @Patch('me/avatar')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      limits: {
+        fileSize: 5 * 1024 * 1024,
+      },
+      fileFilter: (_req, file, callback) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+        if (!allowedTypes.includes(file.mimetype)) {
+          return callback(
+            new BadRequestException('Разрешены только JPEG, PNG и WebP'),
+            false,
+          );
+        }
+
+        callback(null, true);
+      },
+    }),
+  )
+  async updateAvatar(
+    @CurrentUser() user: { userId: string },
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Выбери изображение для аватара');
+    }
+
+    return this.authService.updateAvatar(user.userId, file);
   }
 
   private setAuthCookies(

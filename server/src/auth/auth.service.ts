@@ -10,6 +10,7 @@ import { randomUUID } from 'node:crypto';
 import type { GoogleUser } from './interface.js';
 import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { CloudinaryService } from '../cloudinary/cloudinary.service.js';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async loginWithGoogle(googleUser: GoogleUser) {
@@ -203,6 +205,26 @@ export class AuthService {
 
       throw error;
     }
+  }
+
+  async updateAvatar(userId: string, file: Express.Multer.File) {
+    const result = await this.cloudinaryService.uploadImage(
+      file.buffer,
+      'cinemeow/avatars',
+    );
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { avatar: result.secure_url },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatar: true,
+        username: true,
+        createdAt: true,
+      },
+    });
   }
 
   private async findUserByGoogleSub(googleSub: string) {
