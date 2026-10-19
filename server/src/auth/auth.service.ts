@@ -1,9 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { randomUUID } from 'node:crypto';
 import type { GoogleUser } from './interface.js';
+import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
@@ -169,6 +174,34 @@ export class AuthService {
 
         return;
       }
+    }
+  }
+
+  async updateUsername(userId: string, username: string) {
+    const normalizedUsername = username.toLowerCase();
+
+    try {
+      return await this.prisma.user.update({
+        where: { id: userId },
+        data: { username: normalizedUsername },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatar: true,
+          username: true,
+          createdAt: true,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException('Этот username уже занят');
+      }
+
+      throw error;
     }
   }
 

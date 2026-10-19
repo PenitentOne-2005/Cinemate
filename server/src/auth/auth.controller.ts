@@ -1,6 +1,8 @@
 import {
+  Body,
   Controller,
   Get,
+  Patch,
   Post,
   Req,
   Res,
@@ -10,6 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import type { Request, Response } from 'express';
 import type { GoogleUser } from './interface.js';
+import { UpdateUsernameDto } from './dto/update-username.dto.js';
 import { AuthService } from './auth.service.js';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
 import { PrismaService } from '../prisma/prisma.service.js';
@@ -103,6 +106,15 @@ export class AuthController {
     }
 
     return currentUser;
+  }
+
+  @Patch('me/username')
+  @UseGuards(JwtAuthGuard)
+  async updateUsername(
+    @CurrentUser() user: { userId: string },
+    @Body() dto: UpdateUsernameDto,
+  ) {
+    return this.authService.updateUsername(user.userId, dto.username);
   }
 
   private setAuthCookies(
