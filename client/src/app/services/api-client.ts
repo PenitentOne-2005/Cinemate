@@ -23,7 +23,21 @@ async function apiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
   }
 
   if (!response.ok) {
-    throw new ApiError(`Ошибка запроса: ${response.status}`, response.status);
+    let message = `Ошибка запроса: ${response.status}`;
+
+    try {
+      const data = await response.json();
+
+      if (typeof data.message === "string") {
+        message = data.message;
+      } else if (Array.isArray(data.message)) {
+        message = data.message.join(", ");
+      }
+    } catch {
+      // Ответ сервера не содержит JSON.
+    }
+
+    throw new ApiError(message, response.status);
   }
 
   if (response.status === 204) {

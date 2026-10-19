@@ -1,0 +1,245 @@
+.editButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 9px 13px;
+  border: 1px solid var(--border-color, #333);
+  border-radius: 10px;
+
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.editButton:hover {
+  background: var(--hover-background, #ffffff0d);
+  border-color: #777;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+  background: rgb(0 0 0 / 65%);
+  backdrop-filter: blur(5px);
+}
+
+.modal {
+  width: 100%;
+  max-width: 440px;
+  padding: 26px;
+
+  border: 1px solid var(--border-color, #333);
+  border-radius: 18px;
+
+  background: var(--card-background, #171717);
+  color: var(--text-color, #fff);
+
+  box-shadow: 0 24px 80px rgb(0 0 0 / 35%);
+  animation: modalAppear 0.18s ease-out;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.modalHeader h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.modalHeader p {
+  margin: 0;
+  color: var(--muted-color, #999);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.closeButton {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+
+  width: 36px;
+  height: 36px;
+
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  background: var(--hover-background, #ffffff12);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 0 13px;
+  border: 1px solid var(--border-color, #444);
+  border-radius: 10px;
+
+  background: var(--input-background, #202020);
+  color: var(--muted-color, #999);
+
+  transition: border-color 0.2s;
+}
+
+.inputWrapper:focus-within {
+  border-color: var(--accent-color, #8b7cff);
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  padding: 13px 0;
+
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-color, #fff);
+
+  font: inherit;
+  font-size: 15px;
+}
+
+.hint {
+  margin: 0;
+  color: var(--muted-color, #999);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.message {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.success {
+  color: #4ade80;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.cancelButton,
+.saveButton {
+  padding: 11px 15px;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    background 0.2s;
+}
+
+.cancelButton {
+  border: 1px solid var(--border-color, #444);
+  background: transparent;
+  color: inherit;
+}
+
+.cancelButton:hover {
+  background: var(--hover-background, #ffffff0d);
+}
+
+.saveButton {
+  border: 1px solid transparent;
+  background: var(--accent-color, #8b7cff);
+  color: #fff;
+}
+
+.saveButton:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.saveButton:disabled,
+.cancelButton:disabled,
+.closeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.editButton:focus-visible,
+.closeButton:focus-visible,
+.cancelButton:focus-visible,
+.saveButton:focus-visible {
+  outline: 2px solid var(--accent-color, #8b7cff);
+  outline-offset: 3px;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 21px;
+  }
+
+  .modalHeader h2 {
+    font-size: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal {
+    animation: none;
+  }
+}
