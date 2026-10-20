@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { authService } from "../services/auth.service";
+import { authService } from "../services";
 import { UnauthorizedError, type AuthUser } from "../types/auth.types";
 
 interface AuthContextValue {

@@ -1,1 +1,1 @@
-export { default as UsernameEditor } from "./usernameEditor";
+export { default as UsernameEditor } from "./userInfoEditor";

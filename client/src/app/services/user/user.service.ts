@@ -1,11 +1,7 @@
-import apiRequest from "./api-client";
-import type { AuthUser } from "../types/auth.types";
+import type { AuthUser } from "@/app/types/auth.types";
+import { apiRequest } from "../client";
 
-class AuthService {
-  async getCurrentUser(): Promise<AuthUser> {
-    return apiRequest<AuthUser>("/auth/me");
-  }
-
+class UserService {
   async updateUsername(username: string): Promise<AuthUser> {
     return apiRequest<AuthUser>("/auth/me/username", {
       method: "PATCH",
@@ -27,4 +23,4 @@ class AuthService {
   }
 }
 
-export const authService = new AuthService();
+export const userService = new UserService();
