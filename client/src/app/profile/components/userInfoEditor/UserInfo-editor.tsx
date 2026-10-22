@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth } from "@/app/context";
+import Image from "next/image";
+import type { UserInfoEditorProps } from "./interface";
 import { useUserInfoEditor, useAvatarUpload } from "./hooks";
 import styles from "./userinfo-editor.module.css";
 
-const UserInfoEditor = () => {
-  const { user } = useAuth();
+const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const avatar = useAvatarUpload();
 
   const editor = useUserInfoEditor({
-    user: user!,
+    user: user,
     avatarFile: avatar.avatarFile,
     clearAvatarSelection: avatar.clearAvatarSelection,
     onSuccess: () => {
@@ -37,8 +37,6 @@ const UserInfoEditor = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, avatar.clearAvatarSelection, avatar]);
-
-  if (!user) return null;
 
   function openModal() {
     editor.resetForm();
@@ -95,24 +93,31 @@ const UserInfoEditor = () => {
                   Аватар
                 </label>
 
-                {avatar.avatarPreview && (
-                  <img
-                    src={avatar.avatarPreview}
-                    alt="Предпросмотр нового аватара"
-                    width={100}
-                    height={100}
-                  />
-                )}
+                <div className={styles.avatarEditor}>
+                  {avatar.avatarPreview && (
+                    <Image
+                      className={styles.avatarPreview}
+                      src={avatar.avatarPreview}
+                      alt="Предпросмотр нового аватара"
+                      width={100}
+                      height={100}
+                    />
+                  )}
 
-                <input
-                  id="avatar"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  onClick={(event) => {
-                    event.currentTarget.value = "";
-                  }}
-                  onChange={avatar.handleAvatarChange}
-                />
+                  <input
+                    className={styles.avatarInput}
+                    id="avatar"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onClick={(event) => {
+                      event.currentTarget.value = "";
+                    }}
+                    onChange={avatar.handleAvatarChange}
+                  />
+                </div>
+                <p className={styles.hint}>
+                  Допустимые форматы: JPG, PNG или WebP.
+                </p>
 
                 {avatar.avatarError && (
                   <p role="alert" className={styles.error}>
@@ -126,19 +131,21 @@ const UserInfoEditor = () => {
                   Имя пользователя
                 </label>
 
-                <input
-                  id="username"
-                  className={styles.input}
-                  value={editor.username}
-                  onChange={(event) => editor.setUsername(event.target.value)}
-                  disabled={editor.isSaving}
-                  autoComplete="username"
-                />
+                <div className={styles.inputWrapper}>
+                  <input
+                    id="username"
+                    className={styles.input}
+                    value={editor.username}
+                    onChange={(event) => editor.setUsername(event.target.value)}
+                    disabled={editor.isSaving}
+                    autoComplete="username"
+                  />
+                </div>
               </div>
 
               {editor.message && (
                 <p
-                  className={editor.isError ? styles.error : styles.success}
+                  className={`${styles.message} ${editor.isError ? styles.error : styles.success}`}
                   role={editor.isError ? "alert" : "status"}
                 >
                   {editor.message}

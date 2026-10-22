@@ -20,11 +20,11 @@
   transition:
     background 0.2s,
     border-color 0.2s;
-}
 
-.editButton:hover {
-  background: var(--hover-background, #ffffff0d);
-  border-color: #777;
+  &:hover {
+    background: var(--hover-background, #ffffff0d);
+    border-color: #777;
+  }
 }
 
 .overlay {
@@ -62,19 +62,19 @@
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 26px;
-}
 
-.modalHeader h2 {
-  margin: 0 0 8px;
-  font-size: 22px;
-  font-weight: 650;
-}
+  & h2 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 650;
+  }
 
-.modalHeader p {
-  margin: 0;
-  color: var(--muted-color, #999);
-  font-size: 14px;
-  line-height: 1.5;
+  & p {
+    margin: 0;
+    color: var(--muted-color, #999);
+    font-size: 14px;
+    line-height: 1.5;
+  }
 }
 
 .closeButton {
@@ -90,10 +90,10 @@
   background: transparent;
   color: inherit;
   cursor: pointer;
-}
 
-.closeButton:hover {
-  background: var(--hover-background, #ffffff12);
+  &:hover {
+    background: var(--hover-background, #ffffff12);
+  }
 }
 
 .form {
@@ -103,8 +103,13 @@
 }
 
 .label {
+  display: inline-block;
   font-size: 14px;
   font-weight: 600;
+
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
 }
 
 .inputWrapper {
@@ -120,16 +125,19 @@
   color: var(--muted-color, #999);
 
   transition: border-color 0.2s;
-}
 
-.inputWrapper:focus-within {
-  border-color: var(--accent-color, #8b7cff);
+  &:focus-within {
+    border-color: var(--accent-color, #8b7cff);
+  }
 }
 
 .input {
+  padding: 13px 0;
+}
+
+:is(.input, .avatarInput) {
   width: 100%;
   min-width: 0;
-  padding: 13px 0;
 
   border: none;
   outline: none;
@@ -168,8 +176,7 @@
   margin-top: 22px;
 }
 
-.cancelButton,
-.saveButton {
+:is(.cancelButton, .saveButton) {
   padding: 11px 15px;
   border-radius: 9px;
   font: inherit;
@@ -185,35 +192,34 @@
   border: 1px solid var(--border-color, #444);
   background: transparent;
   color: inherit;
-}
 
-.cancelButton:hover {
-  background: var(--hover-background, #ffffff0d);
+  &:hover {
+    background: var(--hover-background, #ffffff0d);
+  }
 }
 
 .saveButton {
   border: 1px solid transparent;
   background: var(--accent-color, #8b7cff);
   color: #fff;
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+  }
 }
 
-.saveButton:hover:not(:disabled) {
-  opacity: 0.88;
+:is(.saveButton, .cancelButton, .closeButton) {
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
-.saveButton:disabled,
-.cancelButton:disabled,
-.closeButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.editButton:focus-visible,
-.closeButton:focus-visible,
-.cancelButton:focus-visible,
-.saveButton:focus-visible {
-  outline: 2px solid var(--accent-color, #8b7cff);
-  outline-offset: 3px;
+:is(.editButton, .closeButton, .cancelButton, .saveButton) {
+  &:focus-visible {
+    outline: 2px solid var(--accent-color, #8b7cff);
+    outline-offset: 3px;
+  }
 }
 
 .avatarEditor {
@@ -232,6 +238,16 @@
   background: #252525;
 }
 
+@media (max-width: 480px) {
+  .modal {
+    padding: 21px;
+  }
+
+  .modalHeader h2 {
+    font-size: 20px;
+  }
+}
+
 @keyframes modalAppear {
   from {
     opacity: 0;
@@ -241,16 +257,6 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
-  }
-}
-
-@media (max-width: 480px) {
-  .modal {
-    padding: 21px;
-  }
-
-  .modalHeader h2 {
-    font-size: 20px;
   }
 }
 

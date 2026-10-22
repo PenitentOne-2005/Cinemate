@@ -10,7 +10,7 @@ const ProfilePage = () => {
       {(user) => (
         <main className={styles.profilePage}>
           <section className={styles.profileCard}>
-            <UsernameEditor />
+            <UsernameEditor user={user} />
 
             <div className={styles.profileInfo}>
               {user.avatar ? (
