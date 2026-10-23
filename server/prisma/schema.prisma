@@ -14,6 +14,7 @@ model User {
   email     String   @unique
   name      String
   avatar    String?
+  avatarPublicId String? @map("avatar_public_id")
   username  String   @unique
   createdAt DateTime @default(now()) @map("created_at")
 

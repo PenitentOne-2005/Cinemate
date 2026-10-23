@@ -12,6 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { fileTypeFromBuffer } from 'file-type';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import type { Request, Response } from 'express';
@@ -148,6 +149,16 @@ export class AuthController {
   ) {
     if (!file) {
       throw new BadRequestException('Выбери изображение для аватара');
+    }
+
+    const fileType = await fileTypeFromBuffer(file.buffer);
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+    if (!fileType || !allowedTypes.includes(fileType.mime)) {
+      throw new BadRequestException(
+        'Файл должен быть настоящим изображением JPEG, PNG или WebP',
+      );
     }
 
     return this.authService.updateAvatar(user.userId, file);

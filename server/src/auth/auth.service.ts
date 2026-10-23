@@ -208,23 +208,59 @@ export class AuthService {
   }
 
   async updateAvatar(userId: string, file: Express.Multer.File) {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: {
+        avatarPublicId: true,
+      },
+    });
+
     const result = await this.cloudinaryService.uploadImage(
       file.buffer,
       'cinemeow/avatars',
     );
 
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: { avatar: result.secure_url },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        avatar: true,
-        username: true,
-        createdAt: true,
-      },
-    });
+    let updatedUser;
+
+    try {
+      updatedUser = await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          avatar: result.secure_url,
+          avatarPublicId: result.public_id,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatar: true,
+          username: true,
+          createdAt: true,
+        },
+      });
+    } catch (error) {
+      // База не обновилась — удаляем только что загруженный файл,
+      // чтобы он не остался ненужным в Cloudinary.
+      try {
+        await this.cloudinaryService.deleteImage(result.public_id);
+      } catch {
+        // В production здесь стоит записать ошибку в лог.
+      }
+
+      throw error;
+    }
+
+    if (user.avatarPublicId && user.avatarPublicId !== result.public_id) {
+      try {
+        await this.cloudinaryService.deleteImage(user.avatarPublicId);
+      } catch {
+        // Новый аватар уже сохранён.
+        // Ошибка удаления старого файла не должна отменять обновление.
+        // В production здесь стоит записать ошибку в лог.
+      }
+    }
+
+    return updatedUser;
   }
 
   private async findUserByGoogleSub(googleSub: string) {
