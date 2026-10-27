@@ -19,8 +19,8 @@ import type { Request, Response } from 'express';
 import type { GoogleUser } from './interface.js';
 import { UpdateUsernameDto } from './dto/update-username.dto.js';
 import { AuthService } from './auth.service.js';
-import { JwtAuthGuard } from './jwt-auth.guard.js';
-import { CurrentUser } from './decorators/current-user.decorator.js';
+import { JwtAuthGuard } from '../jwt-auth.guard.js';
+import { CurrentUser } from '../current-user.decorator.js';
 import { UserService } from '../user/user.service.js';
 
 @Controller('auth')

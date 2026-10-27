@@ -19,6 +19,8 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
 
   refreshSessions RefreshSession[]
+  sentFriendRequests     Friendship[] @relation("FriendshipRequester")
+  receivedFriendRequests Friendship[] @relation("FriendshipAddressee")
 
   @@map("users")
 }
@@ -39,4 +41,27 @@ model RefreshSession {
   @@index([familyId])
   @@index([userId])
   @@map("refresh_sessions")
+}
+
+enum FriendshipStatus {
+  pending
+  accepted
+}
+
+model Friendship {
+  id          String           @id @default(uuid())
+  requesterId String           @map("requester_id")
+  addresseeId String           @map("addressee_id")
+  status      FriendshipStatus @default(pending)
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  requester User @relation("FriendshipRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+
+  addressee User @relation("FriendshipAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+  @@index([addresseeId, status, createdAt])
+  @@index([requesterId, status, createdAt])
+  @@map("friendships")
 }

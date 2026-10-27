@@ -6,6 +6,7 @@ import { AppService } from './app.service.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { UserModule } from './user/user.module.js';
+import { FriendshipModule } from './friendship/friendship.module.js';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UserModule } from './user/user.module.js';
     PrismaModule,
     AuthModule,
     UserModule,
+    FriendshipModule,
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],

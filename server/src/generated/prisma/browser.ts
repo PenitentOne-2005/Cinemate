@@ -27,3 +27,8 @@ export type User = Prisma.UserModel
  * 
  */
 export type RefreshSession = Prisma.RefreshSessionModel
+/**
+ * Model Friendship
+ * 
+ */
+export type Friendship = Prisma.FriendshipModel

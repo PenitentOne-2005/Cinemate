@@ -3,6 +3,7 @@
 import { ProtectedRoute } from "@/app/components";
 import { UsernameEditor } from "./components";
 import styles from "./profile.module.css";
+import Link from "next/link";
 
 const ProfilePage = () => {
   return (
@@ -10,6 +11,8 @@ const ProfilePage = () => {
       {(user) => (
         <main className={styles.profilePage}>
           <section className={styles.profileCard}>
+            <Link href="/home">Home</Link>
+
             <UsernameEditor user={user} />
 
             <div className={styles.profileInfo}>
