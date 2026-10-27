@@ -20,14 +20,14 @@ import type { GoogleUser } from './interface.js';
 import { UpdateUsernameDto } from './dto/update-username.dto.js';
 import { AuthService } from './auth.service.js';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
-import { PrismaService } from '../prisma/prisma.service.js';
 import { CurrentUser } from './decorators/current-user.decorator.js';
+import { UserService } from '../user/user.service.js';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly prisma: PrismaService,
+    private readonly userService: UserService,
   ) {}
 
   @Get('google')
@@ -94,23 +94,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getMe(@CurrentUser() user: { userId: string }) {
-    const currentUser = await this.prisma.user.findUnique({
-      where: { id: user.userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        avatar: true,
-        username: true,
-        createdAt: true,
-      },
-    });
-
-    if (!currentUser) {
-      throw new UnauthorizedException();
-    }
-
-    return currentUser;
+    return this.userService.getMe(user.userId);
   }
 
   @Patch('me/username')
@@ -119,7 +103,7 @@ export class AuthController {
     @CurrentUser() user: { userId: string },
     @Body() dto: UpdateUsernameDto,
   ) {
-    return this.authService.updateUsername(user.userId, dto.username);
+    return this.userService.updateUsername(user.userId, dto.username);
   }
 
   @Patch('me/avatar')
@@ -152,7 +136,6 @@ export class AuthController {
     }
 
     const fileType = await fileTypeFromBuffer(file.buffer);
-
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
     if (!fileType || !allowedTypes.includes(fileType.mime)) {
@@ -161,7 +144,7 @@ export class AuthController {
       );
     }
 
-    return this.authService.updateAvatar(user.userId, file);
+    return this.userService.updateAvatar(user.userId, file);
   }
 
   private setAuthCookies(

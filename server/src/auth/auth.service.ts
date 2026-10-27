@@ -1,16 +1,11 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  ConflictException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { randomUUID } from 'node:crypto';
 import type { GoogleUser } from './interface.js';
-import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { CloudinaryService } from '../cloudinary/cloudinary.service.js';
+import { UserService } from '../user/user.service.js';
 
 @Injectable()
 export class AuthService {
@@ -18,14 +13,16 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly cloudinaryService: CloudinaryService,
+    private readonly userService: UserService,
   ) {}
 
   async loginWithGoogle(googleUser: GoogleUser) {
-    let user = await this.findUserByGoogleSub(googleUser.googleSub);
+    let user = await this.prisma.user.findUnique({
+      where: { googleSub: googleUser.googleSub },
+    });
 
     if (!user) {
-      user = await this.createUser(googleUser);
+      user = await this.userService.createFromGoogle(googleUser);
     }
 
     const accessToken = await this.createAccessToken(user.id);
@@ -179,110 +176,6 @@ export class AuthService {
     }
   }
 
-  async updateUsername(userId: string, username: string) {
-    const normalizedUsername = username.toLowerCase();
-
-    try {
-      return await this.prisma.user.update({
-        where: { id: userId },
-        data: { username: normalizedUsername },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          avatar: true,
-          username: true,
-          createdAt: true,
-        },
-      });
-    } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new ConflictException('Этот username уже занят');
-      }
-
-      throw error;
-    }
-  }
-
-  async updateAvatar(userId: string, file: Express.Multer.File) {
-    const user = await this.prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: {
-        avatarPublicId: true,
-      },
-    });
-
-    const result = await this.cloudinaryService.uploadImage(
-      file.buffer,
-      'cinemeow/avatars',
-    );
-
-    let updatedUser;
-
-    try {
-      updatedUser = await this.prisma.user.update({
-        where: { id: userId },
-        data: {
-          avatar: result.secure_url,
-          avatarPublicId: result.public_id,
-        },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          avatar: true,
-          username: true,
-          createdAt: true,
-        },
-      });
-    } catch (error) {
-      // База не обновилась — удаляем только что загруженный файл,
-      // чтобы он не остался ненужным в Cloudinary.
-      try {
-        await this.cloudinaryService.deleteImage(result.public_id);
-      } catch {
-        // В production здесь стоит записать ошибку в лог.
-      }
-
-      throw error;
-    }
-
-    if (user.avatarPublicId && user.avatarPublicId !== result.public_id) {
-      try {
-        await this.cloudinaryService.deleteImage(user.avatarPublicId);
-      } catch {
-        // Новый аватар уже сохранён.
-        // Ошибка удаления старого файла не должна отменять обновление.
-        // В production здесь стоит записать ошибку в лог.
-      }
-    }
-
-    return updatedUser;
-  }
-
-  private async findUserByGoogleSub(googleSub: string) {
-    return this.prisma.user.findUnique({
-      where: { googleSub },
-    });
-  }
-
-  private async createUser(googleUser: GoogleUser) {
-    const username = await this.generateUsername(googleUser.name);
-
-    return this.prisma.user.create({
-      data: {
-        googleSub: googleUser.googleSub,
-        name: googleUser.name,
-        email: googleUser.email,
-        avatar: googleUser.avatar,
-        username,
-      },
-    });
-  }
-
   private async createAccessToken(userId: string) {
     return this.jwtService.signAsync(
       {
@@ -350,24 +243,5 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
-  }
-
-  private async generateUsername(name: string): Promise<string> {
-    const baseUsername = name.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user';
-
-    let username = baseUsername;
-    let suffix = 1;
-
-    while (
-      await this.prisma.user.findUnique({
-        where: { username },
-        select: { id: true },
-      })
-    ) {
-      username = `${baseUsername}${suffix}`;
-      suffix++;
-    }
-
-    return username;
   }
 }
