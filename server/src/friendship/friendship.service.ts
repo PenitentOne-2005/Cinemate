@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { Prisma } from '../generated/prisma/client.js';
 
 @Injectable()
 export class FriendshipService {
@@ -41,19 +42,32 @@ export class FriendshipService {
       );
     }
 
-    return this.prisma.friendship.create({
-      data: {
-        requesterId,
-        addresseeId,
-      },
-      select: {
-        id: true,
-        requesterId: true,
-        addresseeId: true,
-        status: true,
-        createdAt: true,
-      },
-    });
+    try {
+      return await this.prisma.friendship.create({
+        data: {
+          requesterId,
+          addresseeId,
+        },
+        select: {
+          id: true,
+          requesterId: true,
+          addresseeId: true,
+          status: true,
+          createdAt: true,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          'Заявка или дружба между этими пользователями уже существует',
+        );
+      }
+
+      throw error;
+    }
   }
 
   async acceptRequest(userId: string, requesterId: string) {

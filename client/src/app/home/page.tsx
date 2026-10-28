@@ -1,3 +1,5 @@
+"use client";
+
 import { ProtectedRoute } from "@/app/components";
 
 const HomePage = () => {
