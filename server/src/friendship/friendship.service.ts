@@ -36,9 +36,7 @@ export class FriendshipService {
 
     if (existingFriendship) {
       throw new ConflictException(
-        existingFriendship.status === 'accepted'
-          ? 'Вы уже друзья'
-          : 'Заявка между этими пользователями уже существует',
+        'Заявка или дружба с этим пользователем уже существует',
       );
     }
 

@@ -8,6 +8,7 @@ import type {
   FriendRequest,
   FriendshipUser,
 } from "../services/friendship/friendship.types";
+import styles from "./page.module.css";
 
 const HomePage = () => {
   const [username, setUsername] = useState("");
@@ -22,9 +23,6 @@ const HomePage = () => {
   const [error, setError] = useState("");
 
   const loadFriendshipData = useCallback(async () => {
-    setIsLoading(true);
-    setError("");
-
     try {
       const [friendsData, requestsData] = await Promise.all([
         friendshipService.getFriends(),
@@ -33,19 +31,35 @@ const HomePage = () => {
 
       setFriends(friendsData);
       setReceivedRequests(requestsData);
+
+      return true;
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
           : "Не удалось загрузить данные о друзьях.",
       );
-    } finally {
-      setIsLoading(false);
+
+      return false;
     }
   }, []);
 
   useEffect(() => {
-    void loadFriendshipData();
+    let ignore = false;
+
+    const loadData = async () => {
+      const success = await loadFriendshipData();
+
+      if (!ignore) {
+        setIsLoading(false);
+      }
+    };
+
+    void loadData();
+
+    return () => {
+      ignore = true;
+    };
   }, [loadFriendshipData]);
 
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -75,6 +89,7 @@ const HomePage = () => {
     setBusyUserId(userId);
     setMessage("");
     setError("");
+    setIsLoading(true);
 
     try {
       const result = await friendshipService.sendRequest(userId);
@@ -85,6 +100,7 @@ const HomePage = () => {
       );
     } finally {
       setBusyUserId(null);
+      setIsLoading(false);
     }
   };
 
@@ -92,6 +108,7 @@ const HomePage = () => {
     setBusyUserId(requesterId);
     setMessage("");
     setError("");
+    setIsLoading(true);
 
     try {
       const result = await friendshipService.acceptRequest(requesterId);
@@ -103,6 +120,7 @@ const HomePage = () => {
       );
     } finally {
       setBusyUserId(null);
+      setIsLoading(false);
     }
   };
 
@@ -110,6 +128,7 @@ const HomePage = () => {
     setBusyUserId(requesterId);
     setMessage("");
     setError("");
+    setIsLoading(true);
 
     try {
       const result = await friendshipService.rejectRequest(requesterId);
@@ -121,6 +140,7 @@ const HomePage = () => {
       );
     } finally {
       setBusyUserId(null);
+      setIsLoading(false);
     }
   };
 
@@ -153,116 +173,259 @@ const HomePage = () => {
   return (
     <ProtectedRoute>
       {() => (
-        <main>
-          <h1>Home</h1>
-          <p>Управление друзьями</p>
+        <main className={styles.page}>
+          <div className={styles.container}>
+            <header className={styles.header}>
+              <div>
+                <span className={styles.eyebrow}>CINEMEOW</span>
+                <h1 className={styles.title}>Главная страница</h1>
+                <p className={styles.subtitle}>
+                  Найди друзей и смотри фильмы вместе.
+                </p>
+              </div>
+            </header>
 
-          {message && <p role="status">{message}</p>}
-          {error && <p role="alert">{error}</p>}
+            {message && (
+              <p className={styles.success} role="status">
+                {message}
+              </p>
+            )}
 
-          <section>
-            <h2>Поиск пользователей</h2>
+            {error && (
+              <p className={styles.error} role="alert">
+                {error}
+              </p>
+            )}
 
-            <form onSubmit={handleSearch}>
-              <label htmlFor="username">Username</label>
-              <input
-                id="username"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-                placeholder="Введите username"
-                required
-              />
+            <section className={styles.panel}>
+              <div className={styles.sectionHeader}>
+                <div>
+                  <h2 className={styles.sectionTitle}>Поиск пользователей</h2>
+                  <p className={styles.sectionDescription}>
+                    Найди человека по его username.
+                  </p>
+                </div>
+              </div>
 
-              <button type="submit" disabled={isSearching}>
-                {isSearching ? "Поиск..." : "Найти"}
-              </button>
-            </form>
-
-            {searchResults.map((foundUser) => (
-              <article key={foundUser.id}>
-                <p>{foundUser.name}</p>
-                <p>@{foundUser.username ?? "username не задан"}</p>
+              <form className={styles.searchForm} onSubmit={handleSearch}>
+                <input
+                  className={styles.input}
+                  id="username"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  placeholder="Например, alex123"
+                  required
+                />
 
                 <button
-                  type="button"
-                  onClick={() => void handleSendRequest(foundUser.id)}
-                  disabled={busyUserId === foundUser.id}
+                  className={styles.primaryButton}
+                  type="submit"
+                  disabled={isSearching}
                 >
-                  {busyUserId === foundUser.id
-                    ? "Отправка..."
-                    : "Добавить в друзья"}
+                  {isSearching ? "Поиск..." : "Найти"}
                 </button>
-              </article>
-            ))}
-          </section>
+              </form>
 
-          <section>
-            <h2>Входящие заявки</h2>
+              {searchResults.length > 0 && (
+                <div className={styles.userList}>
+                  {searchResults.map((foundUser) => (
+                    <article className={styles.userCard} key={foundUser.id}>
+                      <div className={styles.userInfo}>
+                        {foundUser.avatar ? (
+                          <img
+                            className={styles.avatar}
+                            src={foundUser.avatar}
+                            alt=""
+                          />
+                        ) : (
+                          <div className={styles.avatarPlaceholder}>
+                            {foundUser.name.charAt(0).toUpperCase()}
+                          </div>
+                        )}
 
-            {isLoading ? (
-              <p>Загрузка заявок...</p>
-            ) : receivedRequests.length === 0 ? (
-              <p>Входящих заявок нет.</p>
-            ) : (
-              receivedRequests.map((request) => (
-                <article key={request.requestId}>
-                  <p>{request.user.name}</p>
-                  <p>@{request.user.username ?? "username не задан"}</p>
+                        <div>
+                          <p className={styles.userName}>{foundUser.name}</p>
+                          <p className={styles.username}>
+                            @{foundUser.username ?? "username не задан"}
+                          </p>
+                        </div>
+                      </div>
 
-                  <button
-                    type="button"
-                    onClick={() => void handleAcceptRequest(request.user.id)}
-                    disabled={busyUserId === request.user.id}
-                  >
-                    Принять
-                  </button>
+                      <button
+                        className={styles.primaryButton}
+                        type="button"
+                        onClick={() => void handleSendRequest(foundUser.id)}
+                        disabled={busyUserId === foundUser.id}
+                      >
+                        {busyUserId === foundUser.id
+                          ? "Отправка..."
+                          : "Добавить"}
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              )}
 
-                  <button
-                    type="button"
-                    onClick={() => void handleRejectRequest(request.user.id)}
-                    disabled={busyUserId === request.user.id}
-                  >
-                    Отклонить
-                  </button>
-                </article>
-              ))
-            )}
-          </section>
+              {searchResults.length === 0 &&
+                message === "Пользователь не найден." && (
+                  <p className={styles.emptyState}>Пользователь не найден.</p>
+                )}
+            </section>
 
-          <section>
-            <h2>Мои друзья</h2>
+            <div className={styles.contentGrid}>
+              <section className={styles.panel}>
+                <div className={styles.sectionHeader}>
+                  <div>
+                    <h2 className={styles.sectionTitle}>Входящие заявки</h2>
+                    <p className={styles.sectionDescription}>
+                      Люди, которые хотят добавить тебя.
+                    </p>
+                  </div>
 
-            {isLoading ? (
-              <p>Загрузка друзей...</p>
-            ) : friends.length === 0 ? (
-              <p>Пока нет друзей.</p>
-            ) : (
-              friends.map((item) => (
-                <article key={item.friendshipId}>
-                  <p>{item.friend.name}</p>
-                  <p>@{item.friend.username ?? "username не задан"}</p>
+                  <span className={styles.counter}>
+                    {receivedRequests.length}
+                  </span>
+                </div>
 
-                  <button
-                    type="button"
-                    onClick={() => void handleRemoveFriend(item.friend.id)}
-                    disabled={busyUserId === item.friend.id}
-                  >
-                    {busyUserId === item.friend.id
-                      ? "Обработка..."
-                      : "Удалить из друзей"}
-                  </button>
-                </article>
-              ))
-            )}
+                {isLoading ? (
+                  <p className={styles.emptyState}>Загрузка заявок...</p>
+                ) : receivedRequests.length === 0 ? (
+                  <p className={styles.emptyState}>Пока нет входящих заявок.</p>
+                ) : (
+                  <div className={styles.userList}>
+                    {receivedRequests.map((request) => (
+                      <article
+                        className={styles.userCard}
+                        key={request.requestId}
+                      >
+                        <div className={styles.userInfo}>
+                          {request.user.avatar ? (
+                            <img
+                              className={styles.avatar}
+                              src={request.user.avatar}
+                              alt=""
+                            />
+                          ) : (
+                            <div className={styles.avatarPlaceholder}>
+                              {request.user.name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
 
-            <button
-              type="button"
-              onClick={() => void loadFriendshipData()}
-              disabled={isLoading}
-            >
-              Обновить списки
-            </button>
-          </section>
+                          <div>
+                            <p className={styles.userName}>
+                              {request.user.name}
+                            </p>
+                            <p className={styles.username}>
+                              @{request.user.username ?? "username не задан"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className={styles.actions}>
+                          <button
+                            className={styles.primaryButton}
+                            type="button"
+                            onClick={() =>
+                              void handleAcceptRequest(request.user.id)
+                            }
+                            disabled={busyUserId === request.user.id}
+                          >
+                            Принять
+                          </button>
+
+                          <button
+                            className={styles.dangerButton}
+                            type="button"
+                            onClick={() =>
+                              void handleRejectRequest(request.user.id)
+                            }
+                            disabled={busyUserId === request.user.id}
+                          >
+                            Отклонить
+                          </button>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              <section className={styles.panel}>
+                <div className={styles.sectionHeader}>
+                  <div>
+                    <h2 className={styles.sectionTitle}>Мои друзья</h2>
+                    <p className={styles.sectionDescription}>
+                      Твои собеседники и будущие киноманы.
+                    </p>
+                  </div>
+
+                  <span className={styles.counter}>{friends.length}</span>
+                </div>
+
+                {isLoading ? (
+                  <p className={styles.emptyState}>Загрузка друзей...</p>
+                ) : friends.length === 0 ? (
+                  <p className={styles.emptyState}>
+                    Здесь пока никого нет. Самое время найти друзей!
+                  </p>
+                ) : (
+                  <div className={styles.userList}>
+                    {friends.map((item) => (
+                      <article
+                        className={styles.userCard}
+                        key={item.friendshipId}
+                      >
+                        <div className={styles.userInfo}>
+                          {item.friend.avatar ? (
+                            <img
+                              className={styles.avatar}
+                              src={item.friend.avatar}
+                              alt=""
+                            />
+                          ) : (
+                            <div className={styles.avatarPlaceholder}>
+                              {item.friend.name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+
+                          <div>
+                            <p className={styles.userName}>
+                              {item.friend.name}
+                            </p>
+                            <p className={styles.username}>
+                              @{item.friend.username ?? "username не задан"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          className={styles.dangerButton}
+                          type="button"
+                          onClick={() =>
+                            void handleRemoveFriend(item.friend.id)
+                          }
+                          disabled={busyUserId === item.friend.id}
+                        >
+                          {busyUserId === item.friend.id
+                            ? "Обработка..."
+                            : "Удалить"}
+                        </button>
+                      </article>
+                    ))}
+                  </div>
+                )}
+
+                <button
+                  className={styles.secondaryButton}
+                  type="button"
+                  onClick={() => void loadFriendshipData()}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Обновление..." : "Обновить списки"}
+                </button>
+              </section>
+            </div>
+          </div>
         </main>
       )}
     </ProtectedRoute>
