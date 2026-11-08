@@ -1,0 +1,60 @@
+.userCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  background: #202027;
+  border: 1px solid #30303a;
+  border-radius: 12px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+:is(.avatar, .avatarPlaceholder) {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.avatar {
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  display: grid;
+  place-items: center;
+  color: #e8ddff;
+  background: #45336a;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.userName {
+  overflow: hidden;
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+.username {
+  overflow: hidden;
+  margin: 0;
+  color: #92929e;
+  font-size: 12px;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+  .userCard {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

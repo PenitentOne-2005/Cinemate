@@ -1,0 +1,119 @@
+.panel {
+  min-width: 0;
+  padding: 24px;
+  background: #19191f;
+  border: 1px solid #292932;
+  border-radius: 18px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.sectionTitle {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 650;
+}
+
+.sectionDescription {
+  margin: 0;
+}
+
+.counter {
+  display: grid;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  place-items: center;
+  color: #d5c5ff;
+  background: #302541;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.userList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.emptyState {
+  padding: 22px 12px;
+  color: #858591;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.dangerButton {
+  padding: 11px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    opacity 0.2s;
+
+  color: #f0a0a8;
+  background: #302024;
+  border-color: #523039;
+
+  &:hover:not(:disabled) {
+    background: #42272e;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #c4b5fd;
+    outline-offset: 3px;
+  }
+}
+
+.secondaryButton {
+  padding: 11px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    opacity 0.2s;
+
+  width: 100%;
+  margin-top: 20px;
+  color: #ded3ff;
+  background: #25202f;
+  border-color: #45365f;
+
+  &:hover:not(:disabled) {
+    background: #30263f;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #c4b5fd;
+    outline-offset: 3px;
+  }
+}
