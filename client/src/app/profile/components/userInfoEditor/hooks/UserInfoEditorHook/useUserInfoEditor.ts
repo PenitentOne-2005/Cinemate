@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { UseUserInfoEditorOptions } from "./interface";
 import { ApiError } from "@/app/types/auth.types";
-import { useAuth } from "@/app/context";
 import { userService } from "@/app/services";
 
 const useUserInfoEditor = ({
@@ -12,7 +12,7 @@ const useUserInfoEditor = ({
   clearAvatarSelection,
   onSuccess,
 }: UseUserInfoEditorOptions) => {
-  const { updateUser } = useAuth();
+  const router = useRouter();
 
   const [username, setUsername] = useState(user.username);
   const [isSaving, setIsSaving] = useState(false);
@@ -49,11 +49,9 @@ const useUserInfoEditor = ({
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     if (isSaving) return;
 
     const normalizedUsername = username.trim().toLowerCase();
-
     if (!normalizedUsername) {
       setIsError(true);
       setMessage("Имя пользователя не может быть пустым.");
@@ -64,7 +62,6 @@ const useUserInfoEditor = ({
     setMessage("");
     setIsError(false);
 
-    let latestUser = user;
     let hasError = false;
     let usernameUpdated = false;
     let avatarUpdated = false;
@@ -72,9 +69,7 @@ const useUserInfoEditor = ({
     try {
       if (normalizedUsername !== user.username) {
         try {
-          latestUser = await userService.updateUsername(normalizedUsername);
-
-          updateUser(latestUser);
+          await userService.updateUsername(normalizedUsername);
           usernameUpdated = true;
         } catch (error) {
           hasError = true;
@@ -84,13 +79,10 @@ const useUserInfoEditor = ({
 
       if (avatarFile) {
         try {
-          latestUser = await userService.updateAvatar(avatarFile);
-
-          updateUser(latestUser);
+          await userService.updateAvatar(avatarFile);
           avatarUpdated = true;
         } catch (error) {
           hasError = true;
-
           if (!usernameUpdated) {
             showError(error);
           } else {
@@ -102,14 +94,11 @@ const useUserInfoEditor = ({
         }
       }
 
-      if (hasError) {
-        // Не закрываем окно: пользователь может исправить ошибку.
-        // Уже успешно сохранённые изменения остаются сохранёнными.
-        return;
-      }
+      if (hasError) return;
 
-      updateUser(latestUser);
       setMessage("Изменения сохранены.");
+
+      router.refresh();
 
       if (usernameUpdated || avatarUpdated) {
         onSuccess();

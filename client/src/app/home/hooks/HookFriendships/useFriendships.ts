@@ -1,21 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import type { FormEvent } from "react";
 import { friendshipService } from "@/app/services";
+import type { UseFriendshipsProps } from "./interface";
 import type {
   Friend,
   FriendRequest,
   FriendshipUser,
 } from "@/app/services/friendship/friendship.types";
 
-const useFriendships = () => {
+const useFriendships = ({
+  initialFriends,
+  initialRequests,
+}: UseFriendshipsProps) => {
   const [username, setUsername] = useState("");
   const [searchResults, setSearchResults] = useState<FriendshipUser[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [receivedRequests, setReceivedRequests] = useState<FriendRequest[]>([]);
+  const [friends, setFriends] = useState<Friend[]>(initialFriends);
+  const [receivedRequests, setReceivedRequests] =
+    useState<FriendRequest[]>(initialRequests);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [busyUserId, setBusyUserId] = useState<string | null>(null);
 
@@ -43,15 +48,6 @@ const useFriendships = () => {
       return false;
     }
   }, []);
-
-  useEffect(() => {
-    const loadData = async () => {
-      await loadFriendshipData();
-      setIsLoading(false);
-    };
-
-    void loadData();
-  }, [loadFriendshipData]);
 
   const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

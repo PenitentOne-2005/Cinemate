@@ -1,22 +1,26 @@
 .panel {
   min-width: 0;
-  padding: 24px;
+  padding: clamp(1.125rem, 3vw, 1.5rem);
   background: #19191f;
-  border: 1px solid #292932;
-  border-radius: 18px;
+  border: 0.0625rem solid #292932;
+  border-radius: 1.125rem;
+  animation: panelFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .sectionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 22px;
+  gap: 1rem;
+  margin-bottom: 1.375rem;
 }
 
 .sectionTitle {
-  margin: 0 0 6px;
-  font-size: 19px;
+  margin: 0 0 0.375rem;
+  font-size: 1.1875rem;
   font-weight: 650;
 }
 
@@ -26,13 +30,39 @@
 
 .searchForm {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .emptyState {
-  padding: 22px 12px;
+  padding: 1.375rem 0.75rem;
   color: #858591;
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.6;
   text-align: center;
+  animation: panelFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@media (max-width: 30rem) {
+  .searchForm {
+    flex-direction: column;
+  }
+}
+
+@keyframes panelFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .emptyState {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
 }

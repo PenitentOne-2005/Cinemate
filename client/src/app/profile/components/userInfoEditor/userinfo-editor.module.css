@@ -7,73 +7,78 @@
   align-items: center;
   justify-content: center;
 
-  padding: 20px;
+  padding: clamp(1rem, 3vw, 1.5rem);
   background: rgb(0 0 0 / 65%);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(0.3125rem);
+
+  animation: overlayAppear 0.25s ease-out;
 }
 
 .modal {
   width: 100%;
-  max-width: 440px;
-  padding: 26px;
+  max-width: 27.5rem;
+  padding: clamp(1.3125rem, 4vw, 1.625rem);
 
-  border: 1px solid var(--border-color, #333);
-  border-radius: 18px;
+  border: 0.0625rem solid var(--border-color, #333);
+  border-radius: 1.125rem;
 
   background: var(--card-background, #171717);
   color: var(--text-color, #fff);
 
-  box-shadow: 0 24px 80px rgb(0 0 0 / 35%);
-  animation: modalAppear 0.18s ease-out;
+  box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 35%);
+  animation: modalAppear 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modalHeader {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 26px;
+  gap: 1rem;
 
   & h2 {
-    margin: 0 0 8px;
-    font-size: 22px;
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.25rem, 3vw, 1.375rem);
     font-weight: 650;
   }
 
   & p {
     margin: 0;
     color: var(--muted-color, #999);
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 1.5;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 1.625rem;
   }
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .label {
   display: inline-block;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
 
   &:not(:last-child) {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
   }
 }
 
 .hint {
   margin: 0;
   color: var(--muted-color, #999);
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1.5;
 }
 
 .message {
-  margin: 4px 0 0;
-  font-size: 13px;
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
   line-height: 1.5;
 }
 
@@ -88,50 +93,52 @@
 .actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 22px;
+  gap: 0.625rem;
+  margin-top: 1.375rem;
 }
 
 .avatarEditor {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 0.75rem;
+
+  &:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
 }
 
 .avatarPreview {
-  width: 88px;
-  height: 88px;
+  width: 5.5rem;
+  height: 5.5rem;
   border-radius: 50%;
   object-fit: cover;
   background: #252525;
 }
 
-@media (max-width: 480px) {
-  .modal {
-    padding: 21px;
-  }
-
-  .modalHeader h2 {
-    font-size: 20px;
-  }
-}
-
 @keyframes modalAppear {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.98);
+    transform: translateY(0.5rem) scale(0.98);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
 
+@keyframes overlayAppear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .overlay,
   .modal {
-    animation: none;
+    animation: none !important;
   }
 }

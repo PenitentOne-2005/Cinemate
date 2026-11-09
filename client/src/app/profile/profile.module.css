@@ -1,20 +1,28 @@
 .profilePage {
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: clamp(1rem, 4vw, 1.5rem);
   background: var(--background);
   color: var(--text);
+
+  animation: profilePageFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .profileCard {
   position: relative;
   width: 100%;
-  max-width: 420px;
-  padding: 36px 24px;
-  border: 1px solid var(--border);
-  border-radius: 20px;
+  max-width: 26.25rem;
+  padding: clamp(1.875rem, 5vw, 2.25rem) clamp(1.25rem, 4vw, 1.5rem);
+  border: 0.0625rem solid var(--border);
+  border-radius: 1.25rem;
   background: #19191f;
+
+  animation: profileCardFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .profileInfo {
@@ -25,8 +33,8 @@
 }
 
 :is(.profileAvatar, .profileAvatarPlaceholder) {
-  width: 112px;
-  height: 112px;
+  width: 7rem;
+  height: 7rem;
   flex-shrink: 0;
   border-radius: 50%;
 }
@@ -35,7 +43,7 @@
   object-fit: cover;
 
   &:not(:last-child) {
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
   }
 }
 
@@ -44,34 +52,58 @@
   place-items: center;
   background: #28243d;
   color: #b8adff;
-  font-size: 42px;
+  font-size: 2.625rem;
   font-weight: 600;
+
+  &:not(:last-child) {
+    margin-bottom: 0.625rem;
+  }
 }
 
 .profileName {
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 1.3;
   font-weight: 600;
   overflow-wrap: anywhere;
 
   &:not(:last-child) {
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem;
   }
 }
 
 .profileUsername {
-  margin: 6px 0 0;
+  margin: 0.375rem 0 0;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 0.9375rem;
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 520px) {
-  .profilePage {
-    padding: 16px;
+@keyframes profilePageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+@keyframes profileCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profilePage,
   .profileCard {
-    padding: 30px 20px;
+    animation: none !important;
+    transition-duration: 0.01ms !important;
   }
 }

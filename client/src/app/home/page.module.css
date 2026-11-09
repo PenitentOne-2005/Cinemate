@@ -1,53 +1,59 @@
 .page {
   min-height: 100vh;
-  padding: 64px 24px;
+  min-height: 100dvh;
+  padding: clamp(2.25rem, 5vw, 4rem) clamp(1rem, 3vw, 1.5rem);
   background: #101014;
   color: #f5f5f7;
+
+  animation: pageFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .container {
   width: 100%;
-  max-width: 1100px;
+  max-width: 68.75rem;
   margin: 0 auto;
 }
 
 .header {
-  margin-bottom: 36px;
+  margin-bottom: 2.25rem;
+  animation: pageFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
 }
 
 .eyebrow {
   color: #a78bfa;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 3px;
+  letter-spacing: 0.1875rem;
 }
 
 .title {
-  margin: 10px 0;
-  font-size: clamp(32px, 5vw, 44px);
+  margin: 0.625rem 0;
+  font-size: clamp(2rem, 5vw, 2.75rem);
   font-weight: 700;
-  letter-spacing: -1.5px;
+  letter-spacing: -0.09375rem;
 }
 
 :is(.subtitle, .sectionDescription) {
   color: #9696a3;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.6;
 }
 
 .contentGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+  animation: pageFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
 }
 
 :is(.success, .error) {
-  margin: 0 0 18px;
-  padding: 13px 16px;
-  border: 1px solid;
-  border-radius: 10px;
-  font-size: 13px;
+  margin: 0 0 1.125rem;
+  padding: 0.8125rem 1rem;
+  border: 0.0625rem solid;
+  border-radius: 0.625rem;
+  font-size: 0.8125rem;
+  animation: pageFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 .success {
@@ -62,12 +68,28 @@
   border-color: #523039;
 }
 
-@media (max-width: 760px) {
-  .page {
-    padding: 36px 16px;
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+@media (max-width: 47.5rem) {
   .contentGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page,
+  .header,
+  .contentGrid,
+  :is(.success, .error) {
+    animation: none !important;
   }
 }

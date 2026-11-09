@@ -1,43 +1,17 @@
-"use client";
+import { Suspense } from "react";
+import ProfileData from "./ProfileData";
 
-import { ProtectedRoute } from "@/app/components";
-import { UsernameEditor } from "./components";
-import styles from "./profile.module.css";
-import Link from "next/link";
-
-const ProfilePage = () => {
+const ProfilePage = async () => {
   return (
-    <ProtectedRoute>
-      {(user) => (
-        <main className={styles.profilePage}>
-          <section className={styles.profileCard}>
-            <Link href="/home">Home</Link>
-
-            <UsernameEditor user={user} />
-
-            <div className={styles.profileInfo}>
-              {user.avatar ? (
-                <img
-                  className={styles.profileAvatar}
-                  src={user.avatar}
-                  alt={`Аватар ${user.name}`}
-                />
-              ) : (
-                <div
-                  className={styles.profileAvatarPlaceholder}
-                  aria-hidden="true"
-                >
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
-              )}
-
-              <h1 className={styles.profileName}>{user.name}</h1>
-              <p className={styles.profileUsername}>@{user.username}</p>
-            </div>
-          </section>
-        </main>
-      )}
-    </ProtectedRoute>
+    <Suspense
+      fallback={
+        <div style={{ color: "white", padding: "20px" }}>
+          Загрузка профиля...
+        </div>
+      }
+    >
+      <ProfileData />
+    </Suspense>
   );
 };
 

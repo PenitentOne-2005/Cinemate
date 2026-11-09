@@ -19,7 +19,7 @@
 
 .secondaryButton {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 1.25rem;
   color: #ded3ff;
   background: #25202f;
   border-color: #45365f;
@@ -30,7 +30,7 @@
 }
 
 .cancelButton {
-  border: 1px solid var(--border-color, #444);
+  border: 0.0625rem solid var(--border-color, #444);
   background: transparent;
   color: inherit;
 
@@ -40,7 +40,7 @@
 }
 
 .saveButton {
-  border: 1px solid transparent;
+  border: 0.0625rem solid transparent;
   background: var(--accent-color, #8b7cff);
   color: #fff;
 
@@ -54,14 +54,15 @@
   flex-shrink: 0;
   place-items: center;
 
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
 
   border: none;
-  border-radius: 9px;
+  border-radius: 0.5625rem;
   background: transparent;
   color: inherit;
   cursor: pointer;
+  transition: background 0.2s ease;
 
   &:hover {
     background: var(--hover-background, #ffffff12);
@@ -70,26 +71,28 @@
 
 .editButton {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 1.25rem;
+  right: 1.25rem;
 
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 0.4375rem;
 
-  padding: 9px 13px;
-  border: 1px solid var(--border-color, #333);
-  border-radius: 10px;
+  padding: 0.5625rem 0.8125rem;
+  border: 0.0625rem solid var(--border-color, #333);
+  border-radius: 0.625rem;
 
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 14px;
+  font-size: 0.875rem;
 
   cursor: pointer;
   transition:
-    background 0.2s,
-    border-color 0.2s;
+    background 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
 
   &:hover {
     background: var(--hover-background, #ffffff0d);
@@ -98,17 +101,18 @@
 }
 
 :is(.primaryButton, .dangerButton, .secondaryButton) {
-  padding: 11px 16px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  font-size: 13px;
+  padding: 0.6875rem 1rem;
+  border: 0.0625rem solid transparent;
+  border-radius: 0.625rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
   transition:
-    background 0.2s,
-    border-color 0.2s,
-    opacity 0.2s;
+    background 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
 
   &:disabled {
     opacity: 0.5;
@@ -116,29 +120,71 @@
   }
 
   &:focus-visible {
-    outline: 2px solid #c4b5fd;
-    outline-offset: 3px;
+    outline: 0.125rem solid #c4b5fd;
+    outline-offset: 0.1875rem;
   }
 }
 
 :is(.cancelButton, .saveButton) {
-  padding: 11px 15px;
-  border-radius: 9px;
+  padding: 0.6875rem 0.9375rem;
+  border-radius: 0.5625rem;
   font: inherit;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
   transition:
-    opacity 0.2s,
-    background 0.2s;
+    opacity 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
-:is(.saveButton, .cancelButton, .closeButton):disabled {
+:is(.closeButton, .cancelButton, .saveButton, .editButton) {
+  animation: buttonFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+:is(.closeButton, .cancelButton, .saveButton, .editButton):disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
 :is(.closeButton, .cancelButton, .saveButton, .editButton):focus-visible {
-  outline: 2px solid var(--accent-color, #8b7cff);
-  outline-offset: 3px;
+  outline: 0.125rem solid var(--accent-color, #8b7cff);
+  outline-offset: 0.1875rem;
+}
+
+@keyframes buttonFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.375rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(
+    .primaryButton,
+    .dangerButton,
+    .secondaryButton,
+    .cancelButton,
+    .saveButton,
+    .closeButton,
+    .editButton
+  ),
+  :is(
+      .primaryButton,
+      .dangerButton,
+      .secondaryButton,
+      .cancelButton,
+      .saveButton,
+      .closeButton,
+      .editButton
+    )
+    * {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
 }

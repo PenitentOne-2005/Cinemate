@@ -2,23 +2,33 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 14px;
+  gap: 0.75rem;
+  padding: 0.875rem;
   background: #202027;
-  border: 1px solid #30303a;
-  border-radius: 12px;
+  border: 0.0625rem solid #30303a;
+  border-radius: 0.75rem;
+
+  animation: userCardFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    border-color: #454552;
+  }
 }
 
 .userInfo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   min-width: 0;
 }
 
 :is(.avatar, .avatarPlaceholder) {
-  width: 42px;
-  height: 42px;
+  width: 2.625rem;
+  height: 2.625rem;
   flex-shrink: 0;
   border-radius: 50%;
 }
@@ -32,29 +42,49 @@
   place-items: center;
   color: #e8ddff;
   background: #45336a;
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
 }
 
 .userName {
   overflow: hidden;
-  margin: 0 0 4px;
-  font-size: 14px;
+  margin: 0 0 0.25rem;
+  font-size: 0.875rem;
   font-weight: 600;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .username {
   overflow: hidden;
   margin: 0;
   color: #92929e;
-  font-size: 12px;
+  font-size: 0.75rem;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 30rem) {
   .userCard {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+@keyframes userCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .userCard {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
   }
 }
