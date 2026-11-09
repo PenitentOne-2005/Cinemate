@@ -1,4 +1,5 @@
 import type { FriendsListProps } from "./interface";
+import { Button } from "@/app/components";
 import { UserCard } from "../index";
 import styles from "./FriendsList.module.css";
 
@@ -32,27 +33,27 @@ const FriendsList = ({
         <div className={styles.userList}>
           {friends.map((item) => (
             <UserCard key={item.friendshipId} user={item.friend}>
-              <button
-                className={styles.dangerButton}
+              <Button
                 type="button"
+                className="dangerButton"
                 onClick={() => onRemove(item.friend.id)}
                 disabled={busyUserId === item.friend.id}
               >
                 {busyUserId === item.friend.id ? "Обработка..." : "Удалить"}
-              </button>
+              </Button>
             </UserCard>
           ))}
         </div>
       )}
 
-      <button
-        className={styles.secondaryButton}
+      <Button
         type="button"
+        className="secondaryButton"
         onClick={onRefresh}
         disabled={isLoading}
       >
         {isLoading ? "Обновление..." : "Обновить списки"}
-      </button>
+      </Button>
     </section>
   );
 };

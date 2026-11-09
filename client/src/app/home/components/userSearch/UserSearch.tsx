@@ -1,4 +1,5 @@
 import type { UserSearchProps } from "./interface";
+import { Button, Input } from "@/app/components";
 import { UserCard } from "../index";
 import styles from "./UserSearch.module.css";
 
@@ -24,8 +25,7 @@ const UserSearch = ({
       </div>
 
       <form className={styles.searchForm} onSubmit={onSearch}>
-        <input
-          className={styles.input}
+        <Input
           id="username"
           value={username}
           onChange={(event) => onUsernameChange(event.target.value)}
@@ -33,27 +33,23 @@ const UserSearch = ({
           required
         />
 
-        <button
-          className={styles.primaryButton}
-          type="submit"
-          disabled={isSearching}
-        >
+        <Button type="submit" className="primaryButton" disabled={isSearching}>
           {isSearching ? "Поиск..." : "Найти"}
-        </button>
+        </Button>
       </form>
 
       {searchResults.length > 0 && (
         <div className={styles.userList}>
           {searchResults.map((user) => (
             <UserCard key={user.id} user={user}>
-              <button
-                className={styles.primaryButton}
+              <Button
                 type="button"
+                className="primaryButton"
                 onClick={() => onSendRequest(user.id)}
                 disabled={busyUserId === user.id}
               >
                 {busyUserId === user.id ? "Отправка..." : "Добавить"}
-              </button>
+              </Button>
             </UserCard>
           ))}
         </div>

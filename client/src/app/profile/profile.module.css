@@ -14,7 +14,7 @@
   padding: 36px 24px;
   border: 1px solid var(--border);
   border-radius: 20px;
-  background: var(--surface);
+  background: #19191f;
 }
 
 .profileInfo {

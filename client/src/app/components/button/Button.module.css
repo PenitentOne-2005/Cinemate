@@ -1,0 +1,144 @@
+.primaryButton {
+  color: #fff;
+  background: #7955d9;
+
+  &:hover:not(:disabled) {
+    background: #8b68ed;
+  }
+}
+
+.dangerButton {
+  color: #f0a0a8;
+  background: #302024;
+  border-color: #523039;
+
+  &:hover:not(:disabled) {
+    background: #42272e;
+  }
+}
+
+.secondaryButton {
+  width: 100%;
+  margin-top: 20px;
+  color: #ded3ff;
+  background: #25202f;
+  border-color: #45365f;
+
+  &:hover:not(:disabled) {
+    background: #30263f;
+  }
+}
+
+.cancelButton {
+  border: 1px solid var(--border-color, #444);
+  background: transparent;
+  color: inherit;
+
+  &:hover {
+    background: var(--hover-background, #ffffff0d);
+  }
+}
+
+.saveButton {
+  border: 1px solid transparent;
+  background: var(--accent-color, #8b7cff);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+  }
+}
+
+.closeButton {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+
+  width: 36px;
+  height: 36px;
+
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--hover-background, #ffffff12);
+  }
+}
+
+.editButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 9px 13px;
+  border: 1px solid var(--border-color, #333);
+  border-radius: 10px;
+
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+
+  &:hover {
+    background: var(--hover-background, #ffffff0d);
+    border-color: #777;
+  }
+}
+
+:is(.primaryButton, .dangerButton, .secondaryButton) {
+  padding: 11px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    opacity 0.2s;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #c4b5fd;
+    outline-offset: 3px;
+  }
+}
+
+:is(.cancelButton, .saveButton) {
+  padding: 11px 15px;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    background 0.2s;
+}
+
+:is(.saveButton, .cancelButton, .closeButton):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+:is(.closeButton, .cancelButton, .saveButton, .editButton):focus-visible {
+  outline: 2px solid var(--accent-color, #8b7cff);
+  outline-offset: 3px;
+}

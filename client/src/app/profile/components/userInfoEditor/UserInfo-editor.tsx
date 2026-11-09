@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { UserInfoEditorProps } from "./interface";
 import { useUserInfoEditor, useAvatarUpload } from "./hooks";
+import { Input, Button } from "@/app/components";
 import styles from "./userinfo-editor.module.css";
 
 const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
@@ -54,9 +55,9 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
 
   return (
     <>
-      <button type="button" className={styles.editButton} onClick={openModal}>
+      <Button type="button" className="editButton" onClick={openModal}>
         Edit
-      </button>
+      </Button>
 
       {isOpen && (
         <div
@@ -76,15 +77,15 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
             <header className={styles.modalHeader}>
               <h2 id="user-info-editor-title">Редактировать профиль</h2>
 
-              <button
+              <Button
                 type="button"
-                className={styles.closeButton}
+                className="closeButton"
                 onClick={closeModal}
                 disabled={editor.isSaving}
                 aria-label="Закрыть окно"
               >
                 ×
-              </button>
+              </Button>
             </header>
 
             <form className={styles.form} onSubmit={editor.handleSubmit}>
@@ -104,8 +105,7 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
                     />
                   )}
 
-                  <input
-                    className={styles.avatarInput}
+                  <Input
                     id="avatar"
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
@@ -131,16 +131,13 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
                   Имя пользователя
                 </label>
 
-                <div className={styles.inputWrapper}>
-                  <input
-                    id="username"
-                    className={styles.input}
-                    value={editor.username}
-                    onChange={(event) => editor.setUsername(event.target.value)}
-                    disabled={editor.isSaving}
-                    autoComplete="username"
-                  />
-                </div>
+                <Input
+                  id="username"
+                  value={editor.username}
+                  onChange={(event) => editor.setUsername(event.target.value)}
+                  disabled={editor.isSaving}
+                  autoComplete="username"
+                />
               </div>
 
               {editor.message && (
@@ -153,22 +150,22 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
               )}
 
               <div className={styles.actions}>
-                <button
+                <Button
                   type="button"
-                  className={styles.cancelButton}
+                  className="cancelButton"
                   onClick={closeModal}
                   disabled={editor.isSaving}
                 >
                   Отмена
-                </button>
+                </Button>
 
-                <button
+                <Button
                   type="submit"
-                  className={styles.saveButton}
+                  className="saveButton"
                   disabled={editor.isSaving}
                 >
                   {editor.isSaving ? "Сохранение..." : "Сохранить"}
-                </button>
+                </Button>
               </div>
             </form>
           </section>

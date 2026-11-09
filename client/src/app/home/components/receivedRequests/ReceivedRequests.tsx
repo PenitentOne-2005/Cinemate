@@ -1,4 +1,5 @@
 import type { ReceivedRequestsProps } from "./interface";
+import { Button } from "@/app/components";
 import { UserCard } from "../index";
 import styles from "./ReceivedRequests.module.css";
 
@@ -31,23 +32,23 @@ const ReceivedRequests = ({
           {requests.map((request) => (
             <UserCard key={request.requestId} user={request.user}>
               <div className={styles.actions}>
-                <button
-                  className={styles.primaryButton}
+                <Button
                   type="button"
+                  className="primaryButton"
                   onClick={() => onAccept(request.user.id)}
                   disabled={busyUserId === request.user.id}
                 >
                   Принять
-                </button>
+                </Button>
 
-                <button
-                  className={styles.dangerButton}
+                <Button
                   type="button"
+                  className="dangerButton"
                   onClick={() => onReject(request.user.id)}
                   disabled={busyUserId === request.user.id}
                 >
                   Отклонить
-                </button>
+                </Button>
               </div>
             </UserCard>
           ))}
