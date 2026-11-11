@@ -14,7 +14,7 @@ const useUserInfoEditor = ({
 }: UseUserInfoEditorOptions) => {
   const router = useRouter();
 
-  const [username, setUsername] = useState(user.username);
+  const [username, setUsername] = useState(() => user.username);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);

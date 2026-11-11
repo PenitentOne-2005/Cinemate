@@ -16,9 +16,10 @@ const useFriendships = ({
   const [searchResults, setSearchResults] = useState<FriendshipUser[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const [friends, setFriends] = useState<Friend[]>(initialFriends);
-  const [receivedRequests, setReceivedRequests] =
-    useState<FriendRequest[]>(initialRequests);
+  const [friends, setFriends] = useState<Friend[]>(() => initialFriends);
+  const [receivedRequests, setReceivedRequests] = useState<FriendRequest[]>(
+    () => initialRequests,
+  );
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
