@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { UserCardProps } from "./interface";
 import styles from "./UserCard.module.css";
 
@@ -6,7 +7,13 @@ const UserCard = ({ user, children }: UserCardProps) => {
     <article className={styles.userCard}>
       <div className={styles.userInfo}>
         {user.avatar ? (
-          <img className={styles.avatar} src={user.avatar} alt="" />
+          <Image
+            className={styles.avatar}
+            src={user.avatar}
+            alt=""
+            width={48}
+            height={48}
+          />
         ) : (
           <div className={styles.avatarPlaceholder}>
             {user.name.charAt(0).toUpperCase()}

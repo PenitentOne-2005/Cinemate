@@ -45,7 +45,7 @@ export class AuthController {
 
     this.setAuthCookies(res, accessToken, refreshToken);
 
-    return res.redirect('http://localhost:3001/profile');
+    return res.redirect('http://localhost:3000/profile');
   }
 
   @Post('refresh')

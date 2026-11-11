@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useId, useRef, type FormEvent } from "react";
 import Image from "next/image";
 import type { UserInfoEditorProps } from "./interface";
 import { useUserInfoEditor, useAvatarUpload } from "./hooks";
@@ -8,41 +8,35 @@ import { Input, Button } from "@/app/components";
 import styles from "./userinfo-editor.module.css";
 
 const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const titleId = useId();
+  const avatarId = useId();
+  const avatarHintId = useId();
+  const avatarErrorId = useId();
+  const usernameId = useId();
 
   const avatar = useAvatarUpload();
 
   const editor = useUserInfoEditor({
-    user: user,
+    user,
     avatarFile: avatar.avatarFile,
     clearAvatarSelection: avatar.clearAvatarSelection,
     onSuccess: () => {
       avatar.clearAvatarSelection();
-      setIsOpen(false);
+      dialogRef.current?.close();
     },
   });
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-        avatar.clearAvatarSelection();
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, avatar.clearAvatarSelection, avatar]);
 
   function openModal() {
     editor.resetForm();
     editor.setUsername(user.username);
-    setIsOpen(true);
+
+    dialogRef.current?.showModal();
+
+    dialogRef.current
+      ?.querySelector<HTMLInputElement>(`[id="${usernameId}"]`)
+      ?.focus();
   }
 
   function closeModal() {
@@ -50,127 +44,152 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
 
     avatar.clearAvatarSelection();
     editor.resetForm();
-    setIsOpen(false);
+
+    dialogRef.current?.close();
   }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    if (editor.isSaving) {
+      event.preventDefault();
+      return;
+    }
+
+    editor.handleSubmit(event);
+  }
+
+  const avatarDescribedBy = avatar.avatarError
+    ? `${avatarHintId} ${avatarErrorId}`
+    : avatarHintId;
 
   return (
     <>
-      <Button type="button" className="editButton" onClick={openModal}>
-        Edit
+      <Button
+        type="button"
+        className="editButton"
+        onClick={openModal}
+        aria-haspopup="dialog"
+      >
+        Редактировать профиль
       </Button>
 
-      {isOpen && (
-        <div
-          className={styles.overlay}
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              closeModal();
-            }
-          }}
-        >
-          <section
-            className={styles.modal}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="user-info-editor-title"
+      <dialog
+        ref={dialogRef}
+        className={styles.modal}
+        aria-labelledby={titleId}
+        onCancel={(event) => {
+          event.preventDefault();
+          closeModal();
+        }}
+        onMouseDown={(event) => {
+          if (event.target === event.currentTarget) {
+            closeModal();
+          }
+        }}
+      >
+        <div className={styles.modalInner}>
+          <header className={styles.modalHeader}>
+            <h2 id={titleId}>Редактировать профиль</h2>
+
+            <Button
+              type="button"
+              className="closeButton"
+              onClick={closeModal}
+              disabled={editor.isSaving}
+              aria-label="Закрыть окно"
+            >
+              <span aria-hidden="true">×</span>
+            </Button>
+          </header>
+
+          <form
+            className={styles.form}
+            onSubmit={handleSubmit}
+            aria-busy={editor.isSaving}
           >
-            <header className={styles.modalHeader}>
-              <h2 id="user-info-editor-title">Редактировать профиль</h2>
+            <div>
+              <label className={styles.label} htmlFor={avatarId}>
+                Аватар
+              </label>
 
-              <Button
-                type="button"
-                className="closeButton"
-                onClick={closeModal}
-                disabled={editor.isSaving}
-                aria-label="Закрыть окно"
-              >
-                ×
-              </Button>
-            </header>
-
-            <form className={styles.form} onSubmit={editor.handleSubmit}>
-              <div>
-                <label className={styles.label} htmlFor="avatar">
-                  Аватар
-                </label>
-
-                <div className={styles.avatarEditor}>
-                  {avatar.avatarPreview && (
-                    <Image
-                      className={styles.avatarPreview}
-                      src={avatar.avatarPreview}
-                      alt="Предпросмотр нового аватара"
-                      width={100}
-                      height={100}
-                    />
-                  )}
-
-                  <Input
-                    id="avatar"
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    onClick={(event) => {
-                      event.currentTarget.value = "";
-                    }}
-                    onChange={avatar.handleAvatarChange}
+              <div className={styles.avatarEditor}>
+                {avatar.avatarPreview && (
+                  <Image
+                    className={styles.avatarPreview}
+                    src={avatar.avatarPreview}
+                    alt="Предпросмотр нового аватара"
+                    width={100}
+                    height={100}
                   />
-                </div>
-                <p className={styles.hint}>
-                  Допустимые форматы: JPG, PNG или WebP.
-                </p>
-
-                {avatar.avatarError && (
-                  <p role="alert" className={styles.error}>
-                    {avatar.avatarError}
-                  </p>
                 )}
-              </div>
-
-              <div>
-                <label className={styles.label} htmlFor="username">
-                  Имя пользователя
-                </label>
 
                 <Input
-                  id="username"
-                  value={editor.username}
-                  onChange={(event) => editor.setUsername(event.target.value)}
+                  id={avatarId}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
                   disabled={editor.isSaving}
-                  autoComplete="username"
+                  aria-describedby={avatarDescribedBy}
+                  aria-invalid={Boolean(avatar.avatarError)}
+                  onClick={(event) => {
+                    event.currentTarget.value = "";
+                  }}
+                  onChange={avatar.handleAvatarChange}
                 />
               </div>
 
-              {editor.message && (
-                <p
-                  className={`${styles.message} ${editor.isError ? styles.error : styles.success}`}
-                  role={editor.isError ? "alert" : "status"}
-                >
-                  {editor.message}
+              <p id={avatarHintId} className={styles.hint}>
+                Допустимые форматы: JPG, PNG или WebP.
+              </p>
+
+              {avatar.avatarError && (
+                <p id={avatarErrorId} role="alert" className={styles.error}>
+                  {avatar.avatarError}
                 </p>
               )}
+            </div>
 
-              <div className={styles.actions}>
-                <Button
-                  type="button"
-                  className="cancelButton"
-                  onClick={closeModal}
-                  disabled={editor.isSaving}
-                >
-                  Отмена
-                </Button>
+            <div>
+              <label className={styles.label} htmlFor={usernameId}>
+                Имя пользователя
+              </label>
 
-                <Button
-                  type="submit"
-                  className="saveButton"
-                  disabled={editor.isSaving}
-                >
-                  {editor.isSaving ? "Сохранение..." : "Сохранить"}
-                </Button>
-              </div>
-            </form>
-          </section>
+              <Input
+                id={usernameId}
+                value={editor.username}
+                onChange={(event) => editor.setUsername(event.target.value)}
+                readOnly={editor.isSaving}
+                autoComplete="nickname"
+              />
+            </div>
+
+            <p role="alert" className={`${styles.message} ${styles.error}`}>
+              {editor.isError ? editor.message : null}
+            </p>
+
+            <p role="status" className={`${styles.message} ${styles.success}`}>
+              {!editor.isError ? editor.message : null}
+            </p>
+
+            <div className={styles.actions}>
+              <Button
+                type="button"
+                className="cancelButton"
+                onClick={closeModal}
+                disabled={editor.isSaving}
+              >
+                Отмена
+              </Button>
+
+              <Button
+                type="submit"
+                className="saveButton"
+                aria-disabled={editor.isSaving}
+              >
+                {editor.isSaving ? "Сохранение..." : "Сохранить"}
+              </Button>
+            </div>
+          </form>
         </div>
-      )}
+      </dialog>
     </>
   );
 };

@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 const Auth = () => {
   return (
     <main className={styles.authPage}>
-      <section className={styles.authCard}>
+      <section className={styles.authCard} aria-labelledby="auth-heading">
         <div className={styles.brandIcon} aria-hidden="true">
           <svg
             viewBox="0 0 24 24"
@@ -20,14 +20,16 @@ const Auth = () => {
           </svg>
         </div>
 
-        <h1 className={styles.brandName}>Cinemeow</h1>
+        <p className={styles.brandName}>Cinemeow</p>
 
         <p className={styles.brandDescription}>
           Смотри вместе. Даже на расстоянии.
         </p>
 
         <div className={styles.authContent}>
-          <h2>Добро пожаловать</h2>
+          <h1 id="auth-heading" className={styles.authTitle}>
+            Добро пожаловать
+          </h1>
 
           <p className={styles.authDescription}>
             Войди, чтобы смотреть видео вместе с друзьями.
@@ -35,7 +37,8 @@ const Auth = () => {
 
           <a
             className={styles.googleButton}
-            href="http://localhost:3000/auth/google"
+            href="http://localhost:3001/auth/google"
+            aria-describedby="auth-terms"
           >
             <svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true">
               <path
@@ -62,7 +65,7 @@ const Auth = () => {
           </a>
         </div>
 
-        <p className={styles.authTerms}>
+        <p className={styles.authTerms} id="auth-terms">
           Продолжая, ты соглашаешься с условиями использования и политикой
           конфиденциальности.
         </p>

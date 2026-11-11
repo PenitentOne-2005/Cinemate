@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import type { ProfileClientProps } from "./interface";
 import { CustomLink } from "../components";
-import { UsernameEditor } from "./components";
+import { UserInfoEditor } from "./components";
 import styles from "./profile.module.css";
 
 const ProfileClient = ({ user }: ProfileClientProps) => {
@@ -12,15 +13,19 @@ const ProfileClient = ({ user }: ProfileClientProps) => {
         <div className={styles.profileHeader}>
           <CustomLink href="/home">Home</CustomLink>
 
-          <UsernameEditor user={user} />
+          <UserInfoEditor user={user} />
         </div>
 
         <div className={styles.profileInfo}>
           {user.avatar ? (
-            <img
+            <Image
               className={styles.profileAvatar}
               src={user.avatar}
               alt={`Аватар ${user.name}`}
+              width={112}
+              height={112}
+              loading="eager"
+              fetchPriority="high"
             />
           ) : (
             <div className={styles.profileAvatarPlaceholder} aria-hidden="true">

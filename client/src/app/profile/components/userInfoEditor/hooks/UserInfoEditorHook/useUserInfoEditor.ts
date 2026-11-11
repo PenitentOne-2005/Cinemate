@@ -64,7 +64,6 @@ const useUserInfoEditor = ({
 
     let hasError = false;
     let usernameUpdated = false;
-    let avatarUpdated = false;
 
     try {
       if (normalizedUsername !== user.username) {
@@ -80,7 +79,6 @@ const useUserInfoEditor = ({
       if (avatarFile) {
         try {
           await userService.updateAvatar(avatarFile);
-          avatarUpdated = true;
         } catch (error) {
           hasError = true;
           if (!usernameUpdated) {
@@ -100,11 +98,7 @@ const useUserInfoEditor = ({
 
       router.refresh();
 
-      if (usernameUpdated || avatarUpdated) {
-        onSuccess();
-      } else {
-        onSuccess();
-      }
+      onSuccess();
     } finally {
       setIsSaving(false);
     }

@@ -1,23 +1,14 @@
-.overlay {
+.modal {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  margin: auto;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: clamp(1rem, 3vw, 1.5rem);
-  background: rgb(0 0 0 / 65%);
-  backdrop-filter: blur(0.3125rem);
-
-  animation: overlayAppear 0.25s ease-out;
-}
-
-.modal {
-  width: 100%;
+  width: calc(100% - 2rem);
   max-width: 27.5rem;
-  padding: clamp(1.3125rem, 4vw, 1.625rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+
+  padding: 0;
 
   border: 0.0625rem solid var(--border-color, #333);
   border-radius: 1.125rem;
@@ -27,6 +18,18 @@
 
   box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 35%);
   animation: modalAppear 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &::backdrop {
+    background: rgb(0 0 0 / 0.6);
+  }
+}
+
+.modalInner {
+  padding: 24px;
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
 }
 
 .modalHeader {
@@ -80,6 +83,10 @@
   margin: 0.25rem 0 0;
   font-size: 0.8125rem;
   line-height: 1.5;
+
+  &:empty {
+    display: none;
+  }
 }
 
 .error {
@@ -127,17 +134,7 @@
   }
 }
 
-@keyframes overlayAppear {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .overlay,
   .modal {
     animation: none !important;
   }
