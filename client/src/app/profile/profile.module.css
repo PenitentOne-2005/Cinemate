@@ -25,6 +25,16 @@
     box-shadow 0.2s ease;
 }
 
+.profileHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-bottom: 1.875rem;
+  }
+}
+
 .profileInfo {
   display: flex;
   flex-direction: column;
@@ -104,6 +114,11 @@
   .profilePage,
   .profileCard {
     animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .navLink,
+  .navLink::after {
     transition-duration: 0.01ms !important;
   }
 }

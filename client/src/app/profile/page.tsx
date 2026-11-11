@@ -1,15 +1,10 @@
 import { Suspense } from "react";
 import ProfileData from "./ProfileData";
+import { Loader } from "../components";
 
 const ProfilePage = async () => {
   return (
-    <Suspense
-      fallback={
-        <div style={{ color: "white", padding: "20px" }}>
-          Загрузка профиля...
-        </div>
-      }
-    >
+    <Suspense fallback={<Loader />}>
       <ProfileData />
     </Suspense>
   );

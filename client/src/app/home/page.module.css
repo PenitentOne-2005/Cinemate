@@ -15,8 +15,15 @@
 }
 
 .header {
-  margin-bottom: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   animation: pageFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+
+  &:not(:last-child) {
+    margin-bottom: 2.25rem;
+  }
 }
 
 .eyebrow {

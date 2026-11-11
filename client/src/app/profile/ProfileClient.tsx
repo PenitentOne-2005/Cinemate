@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import type { ProfileClientProps } from "./interface";
+import { CustomLink } from "../components";
 import { UsernameEditor } from "./components";
 import styles from "./profile.module.css";
 
@@ -9,9 +9,11 @@ const ProfileClient = ({ user }: ProfileClientProps) => {
   return (
     <main className={styles.profilePage}>
       <section className={styles.profileCard}>
-        <Link href="/home">Home</Link>
+        <div className={styles.profileHeader}>
+          <CustomLink href="/home">Home</CustomLink>
 
-        <UsernameEditor user={user} />
+          <UsernameEditor user={user} />
+        </div>
 
         <div className={styles.profileInfo}>
           {user.avatar ? (

@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import HomeData from "./HomeData";
+import { Loader } from "../components";
 
 const Page = () => {
   return (
-    <Suspense fallback={<div>Загрузка...</div>}>
+    <Suspense fallback={<Loader />}>
       <HomeData />
     </Suspense>
   );

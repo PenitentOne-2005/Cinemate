@@ -70,10 +70,6 @@
 }
 
 .editButton {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-
   display: inline-flex;
   align-items: center;
   gap: 0.4375rem;

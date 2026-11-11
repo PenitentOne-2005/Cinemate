@@ -2,6 +2,7 @@
 
 import type { HomePageProps } from "./interface";
 import { useFriendships } from "./hooks";
+import { CustomLink } from "../components";
 import { FriendsList, ReceivedRequests, UserSearch } from "./components";
 import styles from "./page.module.css";
 
@@ -37,6 +38,8 @@ const HomePage = ({ initialFriends, initialRequests }: HomePageProps) => {
               Найди друзей и смотри фильмы вместе.
             </p>
           </div>
+
+          <CustomLink href="/profile">Профиль</CustomLink>
         </header>
 
         {message && (
