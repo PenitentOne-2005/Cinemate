@@ -1,9 +1,10 @@
-import type { AuthUser } from "@/app/types/auth.types";
+import type { AuthUser } from "@/app/shared/types";
+import { ENDPOINTS } from "@/app/shared/api";
 import { apiRequest } from "../client";
 
 class UserService {
   async updateUsername(username: string): Promise<AuthUser> {
-    return apiRequest<AuthUser>("/auth/me/username", {
+    return apiRequest<AuthUser>(ENDPOINTS.auth.username, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -16,7 +17,7 @@ class UserService {
     const formData = new FormData();
     formData.append("avatar", file);
 
-    return apiRequest<AuthUser>("/auth/me/avatar", {
+    return apiRequest<AuthUser>(ENDPOINTS.auth.avatar, {
       method: "PATCH",
       body: formData,
     });

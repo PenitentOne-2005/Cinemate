@@ -1,9 +1,10 @@
-import type { AuthUser } from "@/app/types/auth.types";
+import type { AuthUser } from "@/app/shared/types";
 import { apiRequest } from "../client";
+import { ENDPOINTS } from "@/app/shared/api";
 
 class AuthService {
   async getCurrentUser(): Promise<AuthUser> {
-    return apiRequest<AuthUser>("/auth/me");
+    return apiRequest<AuthUser>(ENDPOINTS.auth.me);
   }
 }
 

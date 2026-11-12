@@ -1,4 +1,4 @@
-import type { AuthUser } from "@/app/types/auth.types";
+import type { AuthUser } from "@/app/shared/types";
 
 export interface UserInfoEditorProps {
   user: AuthUser;

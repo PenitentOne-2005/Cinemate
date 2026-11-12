@@ -1,5 +1,5 @@
 import type { UserSearchProps } from "./interface";
-import { Button, Input } from "@/app/components";
+import { Button, Input } from "@/app/shared/components";
 import { UserCard } from "../index";
 import styles from "./UserSearch.module.css";
 

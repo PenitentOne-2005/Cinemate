@@ -1,5 +1,5 @@
 import type { FriendsListProps } from "./interface";
-import { Button } from "@/app/components";
+import { Button } from "@/app/shared/components";
 import { UserCard } from "../index";
 import styles from "./FriendsList.module.css";
 

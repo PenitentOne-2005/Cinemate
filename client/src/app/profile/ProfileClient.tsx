@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { ProfileClientProps } from "./interface";
-import { CustomLink } from "../components";
+import { CustomLink } from "../shared/components";
 import { UserInfoEditor } from "./components";
 import styles from "./profile.module.css";
 

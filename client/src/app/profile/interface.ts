@@ -1,4 +1,4 @@
-import type { AuthUser } from "../types/auth.types";
+import type { AuthUser } from "../shared/types/auth.types";
 
 export interface ProfileClientProps {
   user: AuthUser;

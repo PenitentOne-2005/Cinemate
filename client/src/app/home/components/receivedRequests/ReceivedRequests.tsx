@@ -1,5 +1,5 @@
 import type { ReceivedRequestsProps } from "./interface";
-import { Button } from "@/app/components";
+import { Button } from "@/app/shared/components";
 import { UserCard } from "../index";
 import styles from "./ReceivedRequests.module.css";
 

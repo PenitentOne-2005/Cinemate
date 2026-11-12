@@ -1,4 +1,5 @@
-import { ApiError, UnauthorizedError } from "../../types/auth.types";
+import { ENDPOINTS } from "@/app/shared/api";
+import { ApiError, UnauthorizedError } from "@/app/shared/types";
 import { API_URL } from "./constants";
 import refreshAccessToken from "./refreshAccessToken";
 
@@ -20,7 +21,7 @@ async function apiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
 
   let response = await sendRequest();
 
-  if (response.status === 401 && path !== "/auth/refresh") {
+  if (response.status === 401 && path !== ENDPOINTS.auth.refresh) {
     const refreshed = await refreshAccessToken();
 
     if (refreshed) {

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import HomeData from "./HomeData";
-import { Loader } from "../components";
+import { Loader } from "../shared/components";
 
 const Page = () => {
   return (

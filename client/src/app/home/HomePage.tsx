@@ -2,7 +2,7 @@
 
 import type { HomePageProps } from "./interface";
 import { useFriendships } from "./hooks";
-import { CustomLink } from "../components";
+import { CustomLink } from "../shared/components";
 import { FriendsList, ReceivedRequests, UserSearch } from "./components";
 import styles from "./page.module.css";
 

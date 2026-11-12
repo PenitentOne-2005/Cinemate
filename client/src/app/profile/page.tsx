@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import ProfileData from "./ProfileData";
-import { Loader } from "../components";
+import { Loader } from "../shared/components";
 
 const ProfilePage = async () => {
   return (

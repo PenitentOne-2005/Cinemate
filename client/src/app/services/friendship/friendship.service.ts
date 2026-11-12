@@ -1,3 +1,4 @@
+import { ENDPOINTS } from "@/app/shared/api";
 import { apiRequest } from "../client";
 import type { IFriendshipService } from "./friendship.service.interface";
 import type {
@@ -10,40 +11,52 @@ import type {
 class FriendshipService implements IFriendshipService {
   async searchUsers(username: string) {
     return apiRequest<FriendshipUser[]>(
-      `/friendships/search?username=${encodeURIComponent(username)}`,
+      `${ENDPOINTS.friendships.search}?username=${encodeURIComponent(username)}`,
     );
   }
 
   async getFriends() {
-    return apiRequest<Friend[]>("/friendships");
+    return apiRequest<Friend[]>(ENDPOINTS.friendships.base);
   }
 
   async getReceivedRequests() {
-    return apiRequest<FriendRequest[]>("/friendships/requests/received");
+    return apiRequest<FriendRequest[]>(ENDPOINTS.friendships.receivedRequests);
   }
 
   async sendRequest(userId: string) {
-    return apiRequest<FriendshipResponse>(`/friendships/${userId}`, {
-      method: "POST",
-    });
+    return apiRequest<FriendshipResponse>(
+      ENDPOINTS.friendships.byUser(userId),
+      {
+        method: "POST",
+      },
+    );
   }
 
   async acceptRequest(userId: string) {
-    return apiRequest<FriendshipResponse>(`/friendships/${userId}/accept`, {
-      method: "PATCH",
-    });
+    return apiRequest<FriendshipResponse>(
+      ENDPOINTS.friendships.accept(userId),
+      {
+        method: "PATCH",
+      },
+    );
   }
 
   async rejectRequest(userId: string) {
-    return apiRequest<FriendshipResponse>(`/friendships/${userId}/reject`, {
-      method: "PATCH",
-    });
+    return apiRequest<FriendshipResponse>(
+      ENDPOINTS.friendships.reject(userId),
+      {
+        method: "PATCH",
+      },
+    );
   }
 
   async removeFriend(userId: string) {
-    return apiRequest<FriendshipResponse>(`/friendships/${userId}`, {
-      method: "DELETE",
-    });
+    return apiRequest<FriendshipResponse>(
+      ENDPOINTS.friendships.byUser(userId),
+      {
+        method: "DELETE",
+      },
+    );
   }
 }
 

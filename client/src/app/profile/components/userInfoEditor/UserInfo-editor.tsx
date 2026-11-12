@@ -4,7 +4,7 @@ import { useId, useRef, type FormEvent } from "react";
 import Image from "next/image";
 import type { UserInfoEditorProps } from "./interface";
 import { useUserInfoEditor, useAvatarUpload } from "./hooks";
-import { Input, Button } from "@/app/components";
+import { Input, Button } from "@/app/shared/components";
 import styles from "./userinfo-editor.module.css";
 
 const UserInfoEditor = ({ user }: UserInfoEditorProps) => {

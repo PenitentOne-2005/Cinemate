@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { UseUserInfoEditorOptions } from "./interface";
-import { ApiError } from "@/app/types/auth.types";
+import { ApiError } from "@/app/shared/types";
 import { userService } from "@/app/services";
 
 const useUserInfoEditor = ({

@@ -1,4 +1,4 @@
-import type { AuthUser } from "../types/auth.types";
+import type { AuthUser } from "../shared/types";
 import { serverApiRequest } from "../services/server";
 import ProfileClient from "./ProfileClient";
 
