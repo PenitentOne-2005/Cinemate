@@ -11,4 +11,6 @@
 export type * from './models/User.js'
 export type * from './models/RefreshSession.js'
 export type * from './models/Friendship.js'
+export type * from './models/Room.js'
+export type * from './models/RoomInvite.js'
 export type * from './commonInputTypes.js'

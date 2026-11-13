@@ -15,3 +15,19 @@ export const FriendshipStatus = {
 } as const
 
 export type FriendshipStatus = (typeof FriendshipStatus)[keyof typeof FriendshipStatus]
+
+
+export const RoomPrivacy = {
+  everyone: 'everyone',
+  friends: 'friends'
+} as const
+
+export type RoomPrivacy = (typeof RoomPrivacy)[keyof typeof RoomPrivacy]
+
+
+export const RoomSource = {
+  youtube: 'youtube',
+  drive: 'drive'
+} as const
+
+export type RoomSource = (typeof RoomSource)[keyof typeof RoomSource]

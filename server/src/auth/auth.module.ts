@@ -25,6 +25,6 @@ import { RefreshSessionCleanupService } from './refresh-session-cleanup.service.
     JwtStrategy,
     RefreshSessionCleanupService,
   ],
-  exports: [AuthService],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

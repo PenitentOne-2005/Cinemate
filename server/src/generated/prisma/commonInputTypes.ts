@@ -152,6 +152,40 @@ export type EnumFriendshipStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumFriendshipStatusFilter<$PrismaModel>
 }
 
+export type EnumRoomPrivacyFilter<$PrismaModel = never> = {
+  equals?: $Enums.RoomPrivacy | Prisma.EnumRoomPrivacyFieldRefInput<$PrismaModel>
+  in?: $Enums.RoomPrivacy[] | Prisma.ListEnumRoomPrivacyFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RoomPrivacy[] | Prisma.ListEnumRoomPrivacyFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRoomPrivacyFilter<$PrismaModel> | $Enums.RoomPrivacy
+}
+
+export type EnumRoomSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.RoomSource | Prisma.EnumRoomSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.RoomSource[] | Prisma.ListEnumRoomSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RoomSource[] | Prisma.ListEnumRoomSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRoomSourceFilter<$PrismaModel> | $Enums.RoomSource
+}
+
+export type EnumRoomPrivacyWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RoomPrivacy | Prisma.EnumRoomPrivacyFieldRefInput<$PrismaModel>
+  in?: $Enums.RoomPrivacy[] | Prisma.ListEnumRoomPrivacyFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RoomPrivacy[] | Prisma.ListEnumRoomPrivacyFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRoomPrivacyWithAggregatesFilter<$PrismaModel> | $Enums.RoomPrivacy
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRoomPrivacyFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRoomPrivacyFilter<$PrismaModel>
+}
+
+export type EnumRoomSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RoomSource | Prisma.EnumRoomSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.RoomSource[] | Prisma.ListEnumRoomSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RoomSource[] | Prisma.ListEnumRoomSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRoomSourceWithAggregatesFilter<$PrismaModel> | $Enums.RoomSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRoomSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRoomSourceFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -301,6 +335,40 @@ export type NestedEnumFriendshipStatusWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumFriendshipStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumFriendshipStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumRoomPrivacyFilter<$PrismaModel = never> = {
+  equals?: $Enums.RoomPrivacy | Prisma.EnumRoomPrivacyFieldRefInput<$PrismaModel>
+  in?: $Enums.RoomPrivacy[] | Prisma.ListEnumRoomPrivacyFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RoomPrivacy[] | Prisma.ListEnumRoomPrivacyFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRoomPrivacyFilter<$PrismaModel> | $Enums.RoomPrivacy
+}
+
+export type NestedEnumRoomSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.RoomSource | Prisma.EnumRoomSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.RoomSource[] | Prisma.ListEnumRoomSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RoomSource[] | Prisma.ListEnumRoomSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRoomSourceFilter<$PrismaModel> | $Enums.RoomSource
+}
+
+export type NestedEnumRoomPrivacyWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RoomPrivacy | Prisma.EnumRoomPrivacyFieldRefInput<$PrismaModel>
+  in?: $Enums.RoomPrivacy[] | Prisma.ListEnumRoomPrivacyFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RoomPrivacy[] | Prisma.ListEnumRoomPrivacyFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRoomPrivacyWithAggregatesFilter<$PrismaModel> | $Enums.RoomPrivacy
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRoomPrivacyFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRoomPrivacyFilter<$PrismaModel>
+}
+
+export type NestedEnumRoomSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RoomSource | Prisma.EnumRoomSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.RoomSource[] | Prisma.ListEnumRoomSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RoomSource[] | Prisma.ListEnumRoomSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRoomSourceWithAggregatesFilter<$PrismaModel> | $Enums.RoomSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRoomSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRoomSourceFilter<$PrismaModel>
 }
 
 

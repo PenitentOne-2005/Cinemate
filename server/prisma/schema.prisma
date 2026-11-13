@@ -22,6 +22,9 @@ model User {
   sentFriendRequests     Friendship[] @relation("FriendshipRequester")
   receivedFriendRequests Friendship[] @relation("FriendshipAddressee")
 
+  roomsOwned  Room[]       @relation("RoomOwner")
+  roomInvites RoomInvite[] @relation("RoomInvitee")
+
   @@map("users")
 }
 
@@ -64,4 +67,46 @@ model Friendship {
   @@index([addresseeId, status, createdAt])
   @@index([requesterId, status, createdAt])
   @@map("friendships")
+}
+
+enum RoomPrivacy {
+  everyone
+  friends
+}
+
+enum RoomSource {
+  youtube
+  drive
+}
+
+model Room {
+  id        String      @id @default(uuid())
+  ownerId   String      @map("owner_id")
+  name      String
+  privacy   RoomPrivacy @default(everyone)
+  source    RoomSource
+  sourceUrl String?     @map("source_url")
+
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  owner   User         @relation("RoomOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  invites RoomInvite[]
+
+  @@index([ownerId, createdAt])
+  @@map("rooms")
+}
+
+model RoomInvite {
+  id        String   @id @default(uuid())
+  roomId    String   @map("room_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user User @relation("RoomInvitee", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, userId])
+  @@index([userId, createdAt])
+  @@map("room_invites")
 }

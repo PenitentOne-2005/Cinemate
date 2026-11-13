@@ -56,3 +56,13 @@ export type RefreshSession = Prisma.RefreshSessionModel
  * 
  */
 export type Friendship = Prisma.FriendshipModel
+/**
+ * Model Room
+ * 
+ */
+export type Room = Prisma.RoomModel
+/**
+ * Model RoomInvite
+ * 
+ */
+export type RoomInvite = Prisma.RoomInviteModel

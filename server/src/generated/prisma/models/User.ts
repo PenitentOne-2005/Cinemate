@@ -209,6 +209,8 @@ export type UserWhereInput = {
   refreshSessions?: Prisma.RefreshSessionListRelationFilter
   sentFriendRequests?: Prisma.FriendshipListRelationFilter
   receivedFriendRequests?: Prisma.FriendshipListRelationFilter
+  roomsOwned?: Prisma.RoomListRelationFilter
+  roomInvites?: Prisma.RoomInviteListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -223,6 +225,8 @@ export type UserOrderByWithRelationInput = {
   refreshSessions?: Prisma.RefreshSessionOrderByRelationAggregateInput
   sentFriendRequests?: Prisma.FriendshipOrderByRelationAggregateInput
   receivedFriendRequests?: Prisma.FriendshipOrderByRelationAggregateInput
+  roomsOwned?: Prisma.RoomOrderByRelationAggregateInput
+  roomInvites?: Prisma.RoomInviteOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -240,6 +244,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   refreshSessions?: Prisma.RefreshSessionListRelationFilter
   sentFriendRequests?: Prisma.FriendshipListRelationFilter
   receivedFriendRequests?: Prisma.FriendshipListRelationFilter
+  roomsOwned?: Prisma.RoomListRelationFilter
+  roomInvites?: Prisma.RoomInviteListRelationFilter
 }, "id" | "googleSub" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -282,6 +288,8 @@ export type UserCreateInput = {
   refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
   sentFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   receivedFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
+  roomsOwned?: Prisma.RoomCreateNestedManyWithoutOwnerInput
+  roomInvites?: Prisma.RoomInviteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -296,6 +304,8 @@ export type UserUncheckedCreateInput = {
   refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
   sentFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   receivedFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
+  roomsOwned?: Prisma.RoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomInvites?: Prisma.RoomInviteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -310,6 +320,8 @@ export type UserUpdateInput = {
   refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
   sentFriendRequests?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   receivedFriendRequests?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
+  roomsOwned?: Prisma.RoomUpdateManyWithoutOwnerNestedInput
+  roomInvites?: Prisma.RoomInviteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -324,6 +336,8 @@ export type UserUncheckedUpdateInput = {
   refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
   sentFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   receivedFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
+  roomsOwned?: Prisma.RoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomInvites?: Prisma.RoomInviteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -451,6 +465,34 @@ export type UserUpdateOneRequiredWithoutReceivedFriendRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedFriendRequestsInput, Prisma.UserUpdateWithoutReceivedFriendRequestsInput>, Prisma.UserUncheckedUpdateWithoutReceivedFriendRequestsInput>
 }
 
+export type UserCreateNestedOneWithoutRoomsOwnedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRoomsOwnedInput, Prisma.UserUncheckedCreateWithoutRoomsOwnedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRoomsOwnedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRoomsOwnedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRoomsOwnedInput, Prisma.UserUncheckedCreateWithoutRoomsOwnedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRoomsOwnedInput
+  upsert?: Prisma.UserUpsertWithoutRoomsOwnedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRoomsOwnedInput, Prisma.UserUpdateWithoutRoomsOwnedInput>, Prisma.UserUncheckedUpdateWithoutRoomsOwnedInput>
+}
+
+export type UserCreateNestedOneWithoutRoomInvitesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRoomInvitesInput, Prisma.UserUncheckedCreateWithoutRoomInvitesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRoomInvitesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRoomInvitesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRoomInvitesInput, Prisma.UserUncheckedCreateWithoutRoomInvitesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRoomInvitesInput
+  upsert?: Prisma.UserUpsertWithoutRoomInvitesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRoomInvitesInput, Prisma.UserUpdateWithoutRoomInvitesInput>, Prisma.UserUncheckedUpdateWithoutRoomInvitesInput>
+}
+
 export type UserCreateWithoutRefreshSessionsInput = {
   id?: string
   googleSub: string
@@ -462,6 +504,8 @@ export type UserCreateWithoutRefreshSessionsInput = {
   createdAt?: Date | string
   sentFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   receivedFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
+  roomsOwned?: Prisma.RoomCreateNestedManyWithoutOwnerInput
+  roomInvites?: Prisma.RoomInviteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRefreshSessionsInput = {
@@ -475,6 +519,8 @@ export type UserUncheckedCreateWithoutRefreshSessionsInput = {
   createdAt?: Date | string
   sentFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   receivedFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
+  roomsOwned?: Prisma.RoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomInvites?: Prisma.RoomInviteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRefreshSessionsInput = {
@@ -504,6 +550,8 @@ export type UserUpdateWithoutRefreshSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentFriendRequests?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   receivedFriendRequests?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
+  roomsOwned?: Prisma.RoomUpdateManyWithoutOwnerNestedInput
+  roomInvites?: Prisma.RoomInviteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefreshSessionsInput = {
@@ -517,6 +565,8 @@ export type UserUncheckedUpdateWithoutRefreshSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   receivedFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
+  roomsOwned?: Prisma.RoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomInvites?: Prisma.RoomInviteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSentFriendRequestsInput = {
@@ -530,6 +580,8 @@ export type UserCreateWithoutSentFriendRequestsInput = {
   createdAt?: Date | string
   refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
   receivedFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
+  roomsOwned?: Prisma.RoomCreateNestedManyWithoutOwnerInput
+  roomInvites?: Prisma.RoomInviteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentFriendRequestsInput = {
@@ -543,6 +595,8 @@ export type UserUncheckedCreateWithoutSentFriendRequestsInput = {
   createdAt?: Date | string
   refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
   receivedFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
+  roomsOwned?: Prisma.RoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomInvites?: Prisma.RoomInviteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentFriendRequestsInput = {
@@ -561,6 +615,8 @@ export type UserCreateWithoutReceivedFriendRequestsInput = {
   createdAt?: Date | string
   refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
   sentFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
+  roomsOwned?: Prisma.RoomCreateNestedManyWithoutOwnerInput
+  roomInvites?: Prisma.RoomInviteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReceivedFriendRequestsInput = {
@@ -574,6 +630,8 @@ export type UserUncheckedCreateWithoutReceivedFriendRequestsInput = {
   createdAt?: Date | string
   refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
   sentFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
+  roomsOwned?: Prisma.RoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomInvites?: Prisma.RoomInviteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReceivedFriendRequestsInput = {
@@ -603,6 +661,8 @@ export type UserUpdateWithoutSentFriendRequestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
   receivedFriendRequests?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
+  roomsOwned?: Prisma.RoomUpdateManyWithoutOwnerNestedInput
+  roomInvites?: Prisma.RoomInviteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentFriendRequestsInput = {
@@ -616,6 +676,8 @@ export type UserUncheckedUpdateWithoutSentFriendRequestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
   receivedFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
+  roomsOwned?: Prisma.RoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomInvites?: Prisma.RoomInviteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReceivedFriendRequestsInput = {
@@ -640,6 +702,8 @@ export type UserUpdateWithoutReceivedFriendRequestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
   sentFriendRequests?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
+  roomsOwned?: Prisma.RoomUpdateManyWithoutOwnerNestedInput
+  roomInvites?: Prisma.RoomInviteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceivedFriendRequestsInput = {
@@ -653,6 +717,160 @@ export type UserUncheckedUpdateWithoutReceivedFriendRequestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
   sentFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
+  roomsOwned?: Prisma.RoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomInvites?: Prisma.RoomInviteUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutRoomsOwnedInput = {
+  id?: string
+  googleSub: string
+  email: string
+  name: string
+  avatar?: string | null
+  avatarPublicId?: string | null
+  username: string
+  createdAt?: Date | string
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
+  receivedFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
+  roomInvites?: Prisma.RoomInviteCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutRoomsOwnedInput = {
+  id?: string
+  googleSub: string
+  email: string
+  name: string
+  avatar?: string | null
+  avatarPublicId?: string | null
+  username: string
+  createdAt?: Date | string
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
+  receivedFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
+  roomInvites?: Prisma.RoomInviteUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutRoomsOwnedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRoomsOwnedInput, Prisma.UserUncheckedCreateWithoutRoomsOwnedInput>
+}
+
+export type UserUpsertWithoutRoomsOwnedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRoomsOwnedInput, Prisma.UserUncheckedUpdateWithoutRoomsOwnedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRoomsOwnedInput, Prisma.UserUncheckedCreateWithoutRoomsOwnedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRoomsOwnedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRoomsOwnedInput, Prisma.UserUncheckedUpdateWithoutRoomsOwnedInput>
+}
+
+export type UserUpdateWithoutRoomsOwnedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  googleSub?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarPublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
+  receivedFriendRequests?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
+  roomInvites?: Prisma.RoomInviteUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRoomsOwnedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  googleSub?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarPublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
+  roomInvites?: Prisma.RoomInviteUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutRoomInvitesInput = {
+  id?: string
+  googleSub: string
+  email: string
+  name: string
+  avatar?: string | null
+  avatarPublicId?: string | null
+  username: string
+  createdAt?: Date | string
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
+  receivedFriendRequests?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
+  roomsOwned?: Prisma.RoomCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutRoomInvitesInput = {
+  id?: string
+  googleSub: string
+  email: string
+  name: string
+  avatar?: string | null
+  avatarPublicId?: string | null
+  username: string
+  createdAt?: Date | string
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
+  receivedFriendRequests?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
+  roomsOwned?: Prisma.RoomUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutRoomInvitesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRoomInvitesInput, Prisma.UserUncheckedCreateWithoutRoomInvitesInput>
+}
+
+export type UserUpsertWithoutRoomInvitesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRoomInvitesInput, Prisma.UserUncheckedUpdateWithoutRoomInvitesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRoomInvitesInput, Prisma.UserUncheckedCreateWithoutRoomInvitesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRoomInvitesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRoomInvitesInput, Prisma.UserUncheckedUpdateWithoutRoomInvitesInput>
+}
+
+export type UserUpdateWithoutRoomInvitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  googleSub?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarPublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
+  receivedFriendRequests?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
+  roomsOwned?: Prisma.RoomUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRoomInvitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  googleSub?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarPublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedFriendRequests?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
+  roomsOwned?: Prisma.RoomUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 
@@ -664,12 +882,16 @@ export type UserCountOutputType = {
   refreshSessions: number
   sentFriendRequests: number
   receivedFriendRequests: number
+  roomsOwned: number
+  roomInvites: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   refreshSessions?: boolean | UserCountOutputTypeCountRefreshSessionsArgs
   sentFriendRequests?: boolean | UserCountOutputTypeCountSentFriendRequestsArgs
   receivedFriendRequests?: boolean | UserCountOutputTypeCountReceivedFriendRequestsArgs
+  roomsOwned?: boolean | UserCountOutputTypeCountRoomsOwnedArgs
+  roomInvites?: boolean | UserCountOutputTypeCountRoomInvitesArgs
 }
 
 /**
@@ -703,6 +925,20 @@ export type UserCountOutputTypeCountReceivedFriendRequestsArgs<ExtArgs extends r
   where?: Prisma.FriendshipWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRoomsOwnedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RoomWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRoomInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RoomInviteWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -716,6 +952,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   refreshSessions?: boolean | Prisma.User$refreshSessionsArgs<ExtArgs>
   sentFriendRequests?: boolean | Prisma.User$sentFriendRequestsArgs<ExtArgs>
   receivedFriendRequests?: boolean | Prisma.User$receivedFriendRequestsArgs<ExtArgs>
+  roomsOwned?: boolean | Prisma.User$roomsOwnedArgs<ExtArgs>
+  roomInvites?: boolean | Prisma.User$roomInvitesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -757,6 +995,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   refreshSessions?: boolean | Prisma.User$refreshSessionsArgs<ExtArgs>
   sentFriendRequests?: boolean | Prisma.User$sentFriendRequestsArgs<ExtArgs>
   receivedFriendRequests?: boolean | Prisma.User$receivedFriendRequestsArgs<ExtArgs>
+  roomsOwned?: boolean | Prisma.User$roomsOwnedArgs<ExtArgs>
+  roomInvites?: boolean | Prisma.User$roomInvitesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -768,6 +1008,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     refreshSessions: Prisma.$RefreshSessionPayload<ExtArgs>[]
     sentFriendRequests: Prisma.$FriendshipPayload<ExtArgs>[]
     receivedFriendRequests: Prisma.$FriendshipPayload<ExtArgs>[]
+    roomsOwned: Prisma.$RoomPayload<ExtArgs>[]
+    roomInvites: Prisma.$RoomInvitePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1175,6 +1417,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   refreshSessions<T extends Prisma.User$refreshSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refreshSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefreshSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sentFriendRequests<T extends Prisma.User$sentFriendRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentFriendRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receivedFriendRequests<T extends Prisma.User$receivedFriendRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivedFriendRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  roomsOwned<T extends Prisma.User$roomsOwnedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$roomsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  roomInvites<T extends Prisma.User$roomInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$roomInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1674,6 +1918,54 @@ export type User$receivedFriendRequestsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.FriendshipScalarFieldEnum | Prisma.FriendshipScalarFieldEnum[]
+}
+
+/**
+ * User.roomsOwned
+ */
+export type User$roomsOwnedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Room
+   */
+  select?: Prisma.RoomSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Room
+   */
+  omit?: Prisma.RoomOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
+  where?: Prisma.RoomWhereInput
+  orderBy?: Prisma.RoomOrderByWithRelationInput | Prisma.RoomOrderByWithRelationInput[]
+  cursor?: Prisma.RoomWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RoomScalarFieldEnum | Prisma.RoomScalarFieldEnum[]
+}
+
+/**
+ * User.roomInvites
+ */
+export type User$roomInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RoomInvite
+   */
+  select?: Prisma.RoomInviteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RoomInvite
+   */
+  omit?: Prisma.RoomInviteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInviteInclude<ExtArgs> | null
+  where?: Prisma.RoomInviteWhereInput
+  orderBy?: Prisma.RoomInviteOrderByWithRelationInput | Prisma.RoomInviteOrderByWithRelationInput[]
+  cursor?: Prisma.RoomInviteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RoomInviteScalarFieldEnum | Prisma.RoomInviteScalarFieldEnum[]
 }
 
 /**
