@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import type { ProfileClientProps } from "./interface";
 import { CustomLink } from "../shared/components";

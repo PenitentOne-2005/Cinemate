@@ -8,7 +8,6 @@ import { AuthModule } from './auth/auth.module.js';
 import { UserModule } from './user/user.module.js';
 import { FriendshipModule } from './friendship/friendship.module.js';
 import { RoomsModule } from './rooms/rooms.module.js';
-import { RedisModule } from './redis/redis.module.js';
 
 @Module({
   imports: [
@@ -18,7 +17,6 @@ import { RedisModule } from './redis/redis.module.js';
     UserModule,
     FriendshipModule,
     RoomsModule,
-    RedisModule,
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
