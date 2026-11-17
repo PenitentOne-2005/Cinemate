@@ -14,9 +14,9 @@ const FriendsList = ({
     <section className={styles.panel}>
       <div className={styles.sectionHeader}>
         <div>
-          <h2 className={styles.sectionTitle}>Мои друзья</h2>
+          <h2 className={styles.sectionTitle}>My friends</h2>
           <p className={styles.sectionDescription}>
-            Твои собеседники и будущие киноманы.
+            Your conversation partners and future cinephiles.
           </p>
         </div>
 
@@ -24,10 +24,10 @@ const FriendsList = ({
       </div>
 
       {isLoading ? (
-        <p className={styles.emptyState}>Загрузка друзей...</p>
+        <p className={styles.emptyState}>Loading friends...</p>
       ) : friends.length === 0 ? (
         <p className={styles.emptyState}>
-          Здесь пока никого нет. Самое время найти друзей!
+          There’s no one here yet. It’s the perfect time to make some friends!
         </p>
       ) : (
         <div className={styles.userList}>
@@ -39,7 +39,7 @@ const FriendsList = ({
                 onClick={() => onRemove(item.friend.id)}
                 disabled={busyUserId === item.friend.id}
               >
-                {busyUserId === item.friend.id ? "Обработка..." : "Удалить"}
+                {busyUserId === item.friend.id ? "Processing..." : "Delete"}
               </Button>
             </UserCard>
           ))}
@@ -52,7 +52,7 @@ const FriendsList = ({
         onClick={onRefresh}
         disabled={isLoading}
       >
-        {isLoading ? "Обновление..." : "Обновить списки"}
+        {isLoading ? "Update..." : "Update lists"}
       </Button>
     </section>
   );

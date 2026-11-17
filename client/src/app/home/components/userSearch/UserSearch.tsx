@@ -17,9 +17,9 @@ const UserSearch = ({
     <section className={styles.panel}>
       <div className={styles.sectionHeader}>
         <div>
-          <h2 className={styles.sectionTitle}>Поиск пользователей</h2>
+          <h2 className={styles.sectionTitle}>Search for users</h2>
           <p className={styles.sectionDescription}>
-            Найди человека по его username.
+            Find a person by their username.
           </p>
         </div>
       </div>
@@ -29,12 +29,12 @@ const UserSearch = ({
           id="username"
           value={username}
           onChange={(event) => onUsernameChange(event.target.value)}
-          placeholder="Например, alex123"
+          placeholder="For example, alex123"
           required
         />
 
         <Button type="submit" className="primaryButton" disabled={isSearching}>
-          {isSearching ? "Поиск..." : "Найти"}
+          {isSearching ? "Search..." : "Find"}
         </Button>
       </form>
 
@@ -48,7 +48,7 @@ const UserSearch = ({
                 onClick={() => onSendRequest(user.id)}
                 disabled={busyUserId === user.id}
               >
-                {busyUserId === user.id ? "Отправка..." : "Добавить"}
+                {busyUserId === user.id ? "Dispatch..." : "Add"}
               </Button>
             </UserCard>
           ))}
@@ -56,7 +56,7 @@ const UserSearch = ({
       )}
 
       {hasSearched && searchResults.length === 0 && (
-        <p className={styles.emptyState}>Пользователь не найден.</p>
+        <p className={styles.emptyState}>User not found.</p>
       )}
     </section>
   );

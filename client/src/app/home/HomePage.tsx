@@ -33,13 +33,13 @@ const HomePage = ({ initialFriends, initialRequests }: HomePageProps) => {
         <header className={styles.header}>
           <div>
             <span className={styles.eyebrow}>CINEMEOW</span>
-            <h1 className={styles.title}>Главная страница</h1>
+            <h1 className={styles.title}>Home page</h1>
             <p className={styles.subtitle}>
-              Найди друзей и смотри фильмы вместе.
+              Find friends and watch movies together.
             </p>
           </div>
 
-          <CustomLink href="/profile">Профиль</CustomLink>
+          <CustomLink href="/profile">Profile</CustomLink>
         </header>
 
         {message && (

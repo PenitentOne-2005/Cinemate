@@ -14,9 +14,9 @@ const ReceivedRequests = ({
     <section className={styles.panel}>
       <div className={styles.sectionHeader}>
         <div>
-          <h2 className={styles.sectionTitle}>Входящие заявки</h2>
+          <h2 className={styles.sectionTitle}>Incoming requests</h2>
           <p className={styles.sectionDescription}>
-            Люди, которые хотят добавить тебя.
+            People who want to add you.
           </p>
         </div>
 
@@ -24,9 +24,9 @@ const ReceivedRequests = ({
       </div>
 
       {isLoading ? (
-        <p className={styles.emptyState}>Загрузка заявок...</p>
+        <p className={styles.emptyState}>Uploading applications...</p>
       ) : requests.length === 0 ? (
-        <p className={styles.emptyState}>Пока нет входящих заявок.</p>
+        <p className={styles.emptyState}>No incoming requests yet.</p>
       ) : (
         <div className={styles.userList}>
           {requests.map((request) => (
@@ -38,7 +38,7 @@ const ReceivedRequests = ({
                   onClick={() => onAccept(request.user.id)}
                   disabled={busyUserId === request.user.id}
                 >
-                  Принять
+                  Accept
                 </Button>
 
                 <Button
@@ -47,7 +47,7 @@ const ReceivedRequests = ({
                   onClick={() => onReject(request.user.id)}
                   disabled={busyUserId === request.user.id}
                 >
-                  Отклонить
+                  Decline
                 </Button>
               </div>
             </UserCard>
