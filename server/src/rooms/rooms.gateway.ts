@@ -2,7 +2,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
   OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
   ConnectedSocket,
   MessageBody,
@@ -22,7 +21,7 @@ import type { PlaybackState } from './interface.js';
     credentials: true,
   },
 })
-export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class RoomsGateway implements OnGatewayConnection {
   @WebSocketServer()
   server: Server;
 
@@ -192,43 +191,6 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!wasMember) {
       await this.broadcastRoomUsers(roomId);
     }
-  }
-
-  async handleDisconnect(client: Socket) {
-    const userId = client.data.userId;
-    const roomId = client.data.roomId;
-
-    if (!userId || !roomId) {
-      return;
-    }
-
-    const connection = JSON.stringify({
-      roomId,
-      userId,
-      socketId: client.id,
-    });
-
-    const script = `
-    local connectionsKey = KEYS[1]
-    local socketsKey = KEYS[2]
-
-    local connection = ARGV[1]
-    local socketId = ARGV[2]
-    local expiresAt = tonumber(ARGV[3])
-
-    if redis.call('SISMEMBER', socketsKey, socketId) == 1 then
-      redis.call('ZADD', connectionsKey, expiresAt, connection)
-      return 1
-    end
-
-    return 0
-  `;
-
-    await this.redisService.eval(
-      script,
-      ['presence:connections', `room:${roomId}:user:${userId}:sockets`],
-      [connection, client.id, (Date.now() + 30_000).toString()],
-    );
   }
 
   @SubscribeMessage('leave-room')

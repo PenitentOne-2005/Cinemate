@@ -69,7 +69,7 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
         onClick={openModal}
         aria-haspopup="dialog"
       >
-        Редактировать профиль
+        Edit profile
       </Button>
 
       <dialog
@@ -88,14 +88,14 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
       >
         <div className={styles.modalInner}>
           <header className={styles.modalHeader}>
-            <h2 id={titleId}>Редактировать профиль</h2>
+            <h2 id={titleId}>Edit profile</h2>
 
             <Button
               type="button"
               className="closeButton"
               onClick={closeModal}
               disabled={editor.isSaving}
-              aria-label="Закрыть окно"
+              aria-label="Close window"
             >
               <span aria-hidden="true">×</span>
             </Button>
@@ -108,7 +108,7 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
           >
             <div>
               <label className={styles.label} htmlFor={avatarId}>
-                Аватар
+                Avatar
               </label>
 
               <div className={styles.avatarEditor}>
@@ -116,7 +116,7 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
                   <Image
                     className={styles.avatarPreview}
                     src={avatar.avatarPreview}
-                    alt="Предпросмотр нового аватара"
+                    alt="Preview of the new avatar"
                     width={100}
                     height={100}
                   />
@@ -137,7 +137,7 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
               </div>
 
               <p id={avatarHintId} className={styles.hint}>
-                Допустимые форматы: JPG, PNG или WebP.
+                Accepted formats: JPG, PNG or WebP.
               </p>
 
               {avatar.avatarError && (
@@ -149,7 +149,7 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
 
             <div>
               <label className={styles.label} htmlFor={usernameId}>
-                Имя пользователя
+                Username
               </label>
 
               <Input
@@ -176,7 +176,7 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
                 onClick={closeModal}
                 disabled={editor.isSaving}
               >
-                Отмена
+                Cancel
               </Button>
 
               <Button
@@ -184,7 +184,7 @@ const UserInfoEditor = ({ user }: UserInfoEditorProps) => {
                 className="saveButton"
                 aria-disabled={editor.isSaving}
               >
-                {editor.isSaving ? "Сохранение..." : "Сохранить"}
+                {editor.isSaving ? "Saving..." : "Save"}
               </Button>
             </div>
           </form>

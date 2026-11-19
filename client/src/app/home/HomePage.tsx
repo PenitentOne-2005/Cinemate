@@ -1,12 +1,27 @@
 "use client";
 
+import { useState } from "react";
 import type { HomePageProps } from "./interface";
-import { useFriendships } from "./hooks";
+import { useFriendships, useRooms } from "./hooks";
 import { CustomLink } from "../shared/components";
-import { FriendsList, ReceivedRequests, UserSearch } from "./components";
+import {
+  FriendsList,
+  ReceivedRequests,
+  RoomsSection,
+  UserSearch,
+  CreateRoomModal,
+} from "./components";
 import styles from "./page.module.css";
 
-const HomePage = ({ initialFriends, initialRequests }: HomePageProps) => {
+const HomePage = ({
+  initialFriends,
+  initialRequests,
+  initialMyRooms,
+  initialInvitedRooms,
+  initialPublicRooms,
+}: HomePageProps) => {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   const {
     username,
     friends,
@@ -26,6 +41,24 @@ const HomePage = ({ initialFriends, initialRequests }: HomePageProps) => {
     handleRemoveFriend,
     refreshFriendshipData,
   } = useFriendships({ initialFriends, initialRequests });
+
+  const {
+    myRooms,
+    invitedRooms,
+    publicRooms,
+    isLoading: isRoomsLoading,
+    isCreating,
+    busyRoomId,
+    message: roomsMessage,
+    error: roomsError,
+    handleCreateRoom,
+    handleDeleteRoom,
+    refreshRooms,
+  } = useRooms({
+    initialMyRooms,
+    initialInvitedRooms,
+    initialPublicRooms,
+  });
 
   return (
     <main className={styles.page}>
@@ -53,6 +86,25 @@ const HomePage = ({ initialFriends, initialRequests }: HomePageProps) => {
             {error}
           </p>
         )}
+
+        {isCreateModalOpen && (
+          <CreateRoomModal
+            friends={friends}
+            isCreating={isCreating}
+            onClose={() => setIsCreateModalOpen(false)}
+            onCreate={handleCreateRoom}
+          />
+        )}
+
+        <RoomsSection
+          myRooms={myRooms}
+          invitedRooms={invitedRooms}
+          publicRooms={publicRooms}
+          isLoading={isRoomsLoading}
+          busyRoomId={busyRoomId}
+          onDeleteRoom={handleDeleteRoom}
+          onOpenCreateRoom={() => setIsCreateModalOpen(true)}
+        />
 
         <UserSearch
           username={username}

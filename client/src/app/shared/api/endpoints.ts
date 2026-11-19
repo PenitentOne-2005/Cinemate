@@ -14,4 +14,11 @@ export const ENDPOINTS = {
     accept: (userId: string) => `/friendships/${userId}/accept`,
     reject: (userId: string) => `/friendships/${userId}/reject`,
   },
+  rooms: {
+    base: "/rooms",
+    my: "/rooms/my",
+    invited: "/rooms/invited",
+    public: "/rooms/public",
+    byId: (roomId: string) => `/rooms/${roomId}`,
+  },
 } as const;
